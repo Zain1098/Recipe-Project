@@ -19,26 +19,26 @@
 </div>
 
 <!-- Story Section -->
-<section class="py-5 bg-white">
+<section class="py-5" style="background-color: #ffffff;">
     <div class="container py-4">
         <div class="row align-items-center">
             <div class="col-lg-6 col-12 mb-4 mb-lg-0 text-center">
-                <div class="position-relative">
-                    <img src="~/images/about/about4.jpg" alt="Chef Preparing Dish" class="img-fluid rounded-4 shadow-sm" style="max-height: 420px; object-fit: cover;" />
+                <div class="position-relative d-inline-block">
+                    <img src="~/images/about/about4.jpg" alt="Chef Preparing Dish" class="img-fluid rounded-4 shadow-sm" style="max-height: 440px; object-fit: cover; border: 4px solid #faf7f2;" />
                 </div>
             </div>
             <div class="col-lg-6 col-12 ps-lg-5">
-                <p style="font-family: 'Herr Von Muellerhoff', cursive; font-size: 38px; color: #d19f68; margin-bottom: 0;">Our Culinary Philosophy</p>
-                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 36px); margin-bottom: 20px;">
+                <p class="sk-section-subtitle text-start">Our Culinary Philosophy</p>
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 36px); color: #2c221e; margin-bottom: 20px;">
                     Great Food Brings People Together
                 </h2>
-                <p style="color: #666; line-height: 1.8; margin-bottom: 18px;">
+                <p style="color: #786b64; line-height: 1.8; margin-bottom: 18px;">
                     Deliciousa started with a simple belief: anyone can cook unforgettable meals when guided by proven steps, authentic spices, and passion. We curate dishes from world-renowned cuisines — from traditional slow-cooked dum biryanis to artisan handmade pasta and delicate desserts.
                 </p>
-                <p style="color: #666; line-height: 1.8; margin-bottom: 25px;">
+                <p style="color: #786b64; line-height: 1.8; margin-bottom: 25px;">
                     Our platform allows chefs and home foodies to share their kitchen secrets, test new flavors, and celebrate cooking culture across borders.
                 </p>
-                <a asp-controller="Recipes" asp-action="Index" class="btn btn-default btn-primary px-4 py-2">
+                <a asp-controller="Recipes" asp-action="Index" class="btn btn-sk-primary px-4 py-2">
                     Explore Recipes &rarr;
                 </a>
             </div>
@@ -47,30 +47,30 @@
 </section>
 
 <!-- Stats Counter Section -->
-<section class="py-5" style="background: #faf8f5;">
+<section class="py-5" style="background-color: #faf7f2; border-top: 1px solid #ede3da; border-bottom: 1px solid #ede3da;">
     <div class="container py-3">
         <div class="row g-4 text-center">
             <div class="col-6 col-md-3">
-                <div class="p-4 bg-white rounded-3 shadow-sm border h-100">
-                    <h2 class="fw-bold text-warning mb-1" style="font-size: 38px;">@totalRecipes+</h2>
+                <div class="p-4 bg-white rounded-4 shadow-sm border h-100" style="border-color: #ede3da !important;">
+                    <h2 class="fw-bold mb-1" style="font-size: 38px; color: #c26747;">@totalRecipes+</h2>
                     <p class="text-muted mb-0 small text-uppercase">Curated Recipes</p>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="p-4 bg-white rounded-3 shadow-sm border h-100">
-                    <h2 class="fw-bold text-warning mb-1" style="font-size: 38px;">@totalUsers+</h2>
+                <div class="p-4 bg-white rounded-4 shadow-sm border h-100" style="border-color: #ede3da !important;">
+                    <h2 class="fw-bold mb-1" style="font-size: 38px; color: #c26747;">@totalUsers+</h2>
                     <p class="text-muted mb-0 small text-uppercase">Home Chefs</p>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="p-4 bg-white rounded-3 shadow-sm border h-100">
-                    <h2 class="fw-bold text-warning mb-1" style="font-size: 38px;">@totalReviews+</h2>
+                <div class="p-4 bg-white rounded-4 shadow-sm border h-100" style="border-color: #ede3da !important;">
+                    <h2 class="fw-bold mb-1" style="font-size: 38px; color: #e59819;">@totalReviews+</h2>
                     <p class="text-muted mb-0 small text-uppercase">Verified Reviews</p>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="p-4 bg-white rounded-3 shadow-sm border h-100">
-                    <h2 class="fw-bold text-warning mb-1" style="font-size: 38px;">100%</h2>
+                <div class="p-4 bg-white rounded-4 shadow-sm border h-100" style="border-color: #ede3da !important;">
+                    <h2 class="fw-bold mb-1" style="font-size: 38px; color: #2c221e;">100%</h2>
                     <p class="text-muted mb-0 small text-uppercase">Free Access</p>
                 </div>
             </div>
@@ -81,35 +81,35 @@
 <!-- Meet The Chefs -->
 <section class="py-5 bg-white">
     <div class="container py-4">
-        <div class="text-center mb-5">
-            <p style="font-family: 'Herr Von Muellerhoff', cursive; font-size: 38px; color: #d19f68; margin-bottom: 0;">Our Culinary Masters</p>
-            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 36px);">Meet Our Creators</h2>
-            <div style="width: 50px; height: 3px; background: #d19f68; margin: 12px auto;"></div>
+        <div class="sk-section-header">
+            <p class="sk-section-subtitle">Our Culinary Masters</p>
+            <h2 class="sk-section-title">Meet Our Creators</h2>
+            <div class="sk-section-divider"></div>
         </div>
 
         <div class="row g-4 justify-content-center">
-            <div class="col-lg-3 col-md-6 col-12">
-                <div class="card p-3 border-0 shadow-sm text-center rounded-3 h-100">
-                    <img src="~/images/author/author1.jpg" alt="Chef Zain" class="rounded-circle mx-auto mb-3 shadow-sm" style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #d19f68;" />
-                    <h5 class="fw-bold mb-1">Chef Zain</h5>
-                    <p class="text-warning small mb-2">Executive Chef & Creator</p>
-                    <p class="text-muted small">Specializes in modern Continental cuisine and fragrant traditional Biryanis.</p>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card p-4 border shadow-sm text-center rounded-4 h-100" style="border-color: #ede3da !important; background: #faf7f2;">
+                    <img src="~/images/author/author1.jpg" alt="Chef Zain" class="rounded-circle mx-auto mb-3 shadow-sm" style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #c26747;" />
+                    <h5 class="fw-bold mb-1" style="color: #2c221e;">Chef Zain</h5>
+                    <p class="small mb-2" style="color: #c26747; font-weight: 600;">Executive Chef & Creator</p>
+                    <p class="text-muted small">Specializes in modern Continental cuisine, slow-cooked royal delicacies, and fragrant traditional Biryanis.</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-12">
-                <div class="card p-3 border-0 shadow-sm text-center rounded-3 h-100">
-                    <img src="~/images/author/author2.jpg" alt="Sarah Jenkins" class="rounded-circle mx-auto mb-3 shadow-sm" style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #d19f68;" />
-                    <h5 class="fw-bold mb-1">Sarah Jenkins</h5>
-                    <p class="text-warning small mb-2">Pastry & Breakfast Specialist</p>
-                    <p class="text-muted small">Master of fluffy artisanal pancakes, delicate tarts, and molten desserts.</p>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card p-4 border shadow-sm text-center rounded-4 h-100" style="border-color: #ede3da !important; background: #faf7f2;">
+                    <img src="~/images/author/author2.jpg" alt="Sarah Jenkins" class="rounded-circle mx-auto mb-3 shadow-sm" style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #c26747;" />
+                    <h5 class="fw-bold mb-1" style="color: #2c221e;">Sarah Jenkins</h5>
+                    <p class="small mb-2" style="color: #c26747; font-weight: 600;">Pastry & Breakfast Specialist</p>
+                    <p class="text-muted small">Master of fluffy artisanal buttermilk pancakes, delicate fruit pastries, and rich molten chocolate cakes.</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-12">
-                <div class="card p-3 border-0 shadow-sm text-center rounded-3 h-100">
-                    <img src="~/images/author/author3.jpg" alt="Marco Rossi" class="rounded-circle mx-auto mb-3 shadow-sm" style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #d19f68;" />
-                    <h5 class="fw-bold mb-1">Marco Rossi</h5>
-                    <p class="text-warning small mb-2">Italian Pasta Maestro</p>
-                    <p class="text-muted small">Bringing authentic Tuscan garlic sauces and hand-rolled pasta traditions.</p>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card p-4 border shadow-sm text-center rounded-4 h-100" style="border-color: #ede3da !important; background: #faf7f2;">
+                    <img src="~/images/author/author3.jpg" alt="Marco Rossi" class="rounded-circle mx-auto mb-3 shadow-sm" style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #c26747;" />
+                    <h5 class="fw-bold mb-1" style="color: #2c221e;">Marco Rossi</h5>
+                    <p class="small mb-2" style="color: #c26747; font-weight: 600;">Italian Culinary Maestro</p>
+                    <p class="text-muted small">Bringing authentic Tuscan garlic pasta sauces, slow-simmered marinara, and handmade gnocchi traditions.</p>
                 </div>
             </div>
         </div>

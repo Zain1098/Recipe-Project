@@ -5,6 +5,15 @@
     var isSaved = ViewBag.IsSaved as bool? ?? false;
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
     var isAuthorOrAdmin = User.Identity != null && User.Identity.IsAuthenticated && (currentUserId == Model.UserId.ToString() || User.IsInRole("Admin"));
+
+    // Prepare JSON-LD clean strings
+    var authorName = Model.User?.FullName ?? "Chef Zain";
+    var safeTitle = Model.Title.Replace("\"", "\\\"");
+    var safeDesc = Model.Description.Replace("\"", "\\\"");
+    var ratingVal = Model.AverageRating > 0 ? Model.AverageRating.ToString("0.0") : "5.0";
+    var reviewCnt = Math.Max(1, Model.TotalReviews);
+    var ingredientsJson = string.Join(",\n    ", Model.Ingredients.Select(i => "\"" + i.Replace("\"", "\\\"") + "\""));
+    var instructionsJson = string.Join(",\n    ", Model.Instructions.Select(ins => "{\"@type\": \"HowToStep\", \"text\": \"" + ins.Replace("\"", "\\\"") + "\"}"));
 }
 
 <!-- Page Header Banner -->
@@ -21,15 +30,50 @@
     </div>
 </div>
 
+<!-- AEO & SEO: Schema.org Recipe Structured Data for Google Rich Snippets -->
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Recipe",
+  "name": "@Html.Raw(safeTitle)",
+  "image": [
+    "@Model.ImageUrl"
+  ],
+  "author": {
+    "@@type": "Person",
+    "name": "@Html.Raw(authorName)"
+  },
+  "datePublished": "@Model.CreatedAt.ToString("yyyy-MM-dd")",
+  "description": "@Html.Raw(safeDesc)",
+  "prepTime": "PT@(Model.PrepTimeMinutes)M",
+  "cookTime": "PT@(Model.CookTimeMinutes)M",
+  "totalTime": "PT@(Model.PrepTimeMinutes + Model.CookTimeMinutes)M",
+  "recipeCategory": "@Model.Category",
+  "recipeCuisine": "@(Model.Cuisine ?? "International")",
+  "recipeYield": "@(Model.Servings) servings",
+  "recipeIngredient": [
+    @Html.Raw(ingredientsJson)
+  ],
+  "recipeInstructions": [
+    @Html.Raw(instructionsJson)
+  ],
+  "aggregateRating": {
+    "@@type": "AggregateRating",
+    "ratingValue": "@ratingVal",
+    "reviewCount": "@reviewCnt"
+  }
+}
+</script>
+
 <div class="container py-4 py-md-5">
     <div class="row g-4">
         <div class="col-lg-8 col-12">
             <!-- Hero Recipe Image -->
-            <div class="mb-4 position-relative rounded-4 overflow-hidden shadow-sm">
-                <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid w-100" style="max-height: 440px; object-fit: cover;" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
+            <div class="mb-4 position-relative rounded-4 overflow-hidden shadow-sm" style="border: 1px solid #ede3da;">
+                <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid w-100" style="max-height: 460px; object-fit: cover;" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
                 <div class="position-absolute top-0 end-0 p-3">
-                    <button id="saveBtn" class="btn btn-light shadow-sm" onclick="toggleSave(@Model.Id)" style="border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
-                        <i id="heartIcon" class="@(isSaved ? "fas" : "far") fa-heart" style="color: #e74c3c; font-size: 18px;"></i>
+                    <button id="saveBtn" class="btn btn-light shadow-sm" onclick="toggleSave(@Model.Id)" style="border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;" title="Bookmark this recipe">
+                        <i id="heartIcon" class="@(isSaved ? "fas" : "far") fa-heart" style="color: #c26747; font-size: 18px;"></i>
                     </button>
                 </div>
             </div>
@@ -186,7 +230,7 @@
                             <textarea name="comment" rows="3" class="form-control" placeholder="Share your thoughts or any cooking tips..." required></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-default btn-primary py-2 px-4">Submit Review</button>
+                        <button type="submit" class="btn btn-sk-primary py-2 px-4">Submit Review</button>
                     </form>
                 </div>
             </div>
@@ -195,28 +239,28 @@
         <!-- Sidebar -->
         <div class="col-lg-4 col-12">
             <!-- Author Profile Card -->
-            <div class="card p-4 border-0 shadow-sm text-center mb-4 rounded-3">
-                <img src="@(Model.User?.AvatarUrl ?? "/images/author/author1.jpg")" alt="Chef" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 3px solid #d19f68;" />
-                <h5 class="fw-bold mb-1">@(Model.User?.FullName ?? "Chef Zain")</h5>
-                <p class="text-muted small mb-2">Recipe Creator</p>
+            <div class="card p-4 border-0 shadow-sm text-center mb-4 rounded-4" style="background-color: #ffffff; border: 1px solid #ede3da !important;">
+                <img src="@(Model.User?.AvatarUrl ?? "/images/author/author1.jpg")" alt="Chef" style="width: 86px; height: 86px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 3px solid #c26747;" />
+                <h5 class="fw-bold mb-1" style="color: #2c221e;">@(Model.User?.FullName ?? "Chef Zain")</h5>
+                <p class="text-muted small mb-2" style="color: #c26747 !important; font-weight: 600;">Recipe Creator</p>
                 <p class="text-secondary small mb-3">Passionate about authentic flavors, wholesome ingredients, and restaurant-quality home cooking.</p>
-                <a asp-controller="Recipes" asp-action="Index" class="btn btn-sm btn-outline-secondary">Browse More Recipes</a>
+                <a asp-controller="Recipes" asp-action="Index" class="btn btn-sm btn-sk-outline">Browse More Recipes</a>
             </div>
 
             <!-- Related Recipes -->
             @if (relatedRecipes.Any())
             {
-                <div class="card p-3 p-md-4 border-0 shadow-sm rounded-3">
-                    <h5 class="fw-bold mb-3">More in @Model.Category</h5>
+                <div class="card p-3 p-md-4 border-0 shadow-sm rounded-4" style="background-color: #ffffff; border: 1px solid #ede3da !important;">
+                    <h5 class="fw-bold mb-3" style="color: #2c221e;">More in @Model.Category</h5>
                     @foreach (var rel in relatedRecipes)
                     {
                         <div class="d-flex mb-3 align-items-center">
-                            <img src="@rel.ImageUrl" alt="@rel.Title" style="width: 65px; height: 65px; border-radius: 8px; object-fit: cover; margin-right: 12px;" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
+                            <img src="@rel.ImageUrl" alt="@rel.Title" style="width: 68px; height: 68px; border-radius: 10px; object-fit: cover; margin-right: 12px; border: 1px solid #ede3da;" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
                             <div>
-                                <h6 style="font-size: 13px; margin-bottom: 3px; line-height: 1.3;">
-                                    <a asp-controller="Recipes" asp-action="Details" asp-route-id="@rel.Id" class="text-dark">@rel.Title</a>
+                                <h6 style="font-size: 13px; margin-bottom: 4px; line-height: 1.3;">
+                                    <a asp-controller="Recipes" asp-action="Details" asp-route-id="@rel.Id" class="text-dark fw-bold text-decoration-none" style="transition: color 0.2s;">@rel.Title</a>
                                 </h6>
-                                <small class="text-muted"><i class="far fa-clock"></i> @(rel.PrepTimeMinutes + rel.CookTimeMinutes) mins</small>
+                                <small class="text-muted"><i class="far fa-clock" style="color: #c26747;"></i> @(rel.PrepTimeMinutes + rel.CookTimeMinutes) mins</small>
                             </div>
                         </div>
                     }

@@ -1,86 +1,143 @@
 @model IEnumerable<Recipe_Project.Models.Recipe>
 @{
-    ViewData["Title"] = "Deliciousa - Artisanal Recipes & Culinary Inspiration";
+    ViewData["Title"] = "Deliciousa - Artisanal Recipes & Gourmet Culinary Studio";
 }
 
-<!-- Video Hero Section -->
-<div class="video-bg">
+<!-- Hero Section with Background Video & Warm Ambient Overlay -->
+<div class="video-bg position-relative overflow-hidden" style="min-height: 520px;">
     <video autoplay muted loop playsinline preload="metadata" poster="/images/header/header1.jpg">
         <source src="~/images/hero-video.mp4" type="video/mp4">
     </video>
-    <div class="video-overlay"></div>
-    <div class="hero-caption">
+    <div class="video-overlay" style="background: rgba(44, 34, 30, 0.58);"></div>
+
+    <div class="hero-caption" style="position: absolute; width: 100%; top: 50%; transform: translateY(-50%); z-index: 5;">
         <div class="container text-center">
-            <p class="hero-subtitle-responsive text-warning mb-0" style="font-family: 'Herr Von Muellerhoff', cursive;">Authentic Culinary Arts</p>
-            <h1 class="hero-title-responsive text-white fw-bold mb-3" style="font-family: 'Playfair Display', serif; text-shadow: 0 4px 15px rgba(0,0,0,0.5);">
-                Discover & Cook World-Class Recipes
+            <!-- Warm artisanal pill tag -->
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-3 rounded-pill" style="background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.25);">
+                <span style="color: #f5ebe1; font-size: 13px; font-weight: 500; letter-spacing: 1px;">AUTHENTIC CULINARY STUDIO</span>
+            </div>
+
+            <h1 class="text-white fw-bold mb-3" style="font-family: 'Playfair Display', serif; font-size: clamp(30px, 5vw, 54px); text-shadow: 0 4px 20px rgba(0,0,0,0.5); line-height: 1.2;">
+                Delicious Moments for Every Taste
             </h1>
-            <p class="hero-desc-responsive text-white-50 mx-auto mb-4" style="max-width: 650px;">
-                From hearty breakfast skillets to slow-cooked royal dinners and decadent desserts. Tested and perfected for everyday home dining.
+            <p class="text-white-50 mx-auto mb-4" style="max-width: 620px; font-size: clamp(14px, 2vw, 17px); line-height: 1.7;">
+                Experience culinary excellence crafted with passion, wholesome ingredients, and verified kitchen steps for everyday home cooking.
             </p>
+
+            <!-- Integrated Live Search Bar Directly in Hero -->
+            <div class="sk-hero-search mb-4">
+                <form method="get" asp-controller="Recipes" asp-action="Index" class="d-flex align-items-center">
+                    <i class="fas fa-search me-2" style="color: #c26747;"></i>
+                    <input type="text" name="search" class="form-control" placeholder="Search pasta, biryani, cakes, drinks..." aria-label="Search recipes" />
+                    <button type="submit" class="btn btn-sk-primary ms-2">Find Recipe</button>
+                </form>
+            </div>
+
+            <!-- Quick Hero Action Buttons -->
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a asp-controller="Recipes" asp-action="Index" class="btn btn-default btn-primary px-4 py-3">
-                    EXPLORE ALL RECIPES
+                <a asp-controller="Recipes" asp-action="Index" class="btn btn-sk-primary">
+                    <i class="fas fa-compass"></i> Explore All Recipes
                 </a>
-                <a asp-controller="Recipes" asp-action="Create" class="btn btn-default btn-outline text-white border-white px-4 py-3">
-                    + SHARE YOUR RECIPE
+                <a asp-controller="Recipes" asp-action="Create" class="btn btn-sk-light">
+                    <i class="fas fa-plus-circle text-danger"></i> + Share Your Recipe
                 </a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Quick Category Bar -->
-<div class="py-4 bg-light border-bottom">
+<!-- Browse By Category (Savoria Kitchen Circular Style) -->
+<section class="py-5" style="background-color: #faf7f2; border-bottom: 1px solid #ede3da;">
     <div class="container">
-        <div class="filter-pills-scroll">
-            <a asp-controller="Recipes" asp-action="Index" class="filter-btn active">🌟 All Recipes</a>
-            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast" class="filter-btn">🥞 Breakfast</a>
-            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch" class="filter-btn">🥗 Lunch</a>
-            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner" class="filter-btn">🍲 Dinner</a>
-            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert" class="filter-btn">🍰 Dessert</a>
-            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Drinks" class="filter-btn">🍹 Drinks</a>
+        <div class="sk-section-header">
+            <h2 class="sk-section-title">Browse By Category</h2>
+            <div class="sk-section-divider"></div>
+        </div>
+
+        <div class="sk-category-row">
+            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast" class="sk-category-item">
+                <div class="sk-cat-circle">🥞</div>
+                <span class="sk-cat-name">Breakfast</span>
+            </a>
+            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch" class="sk-category-item">
+                <div class="sk-cat-circle">🥗</div>
+                <span class="sk-cat-name">Lunch</span>
+            </a>
+            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner" class="sk-category-item">
+                <div class="sk-cat-circle">🍲</div>
+                <span class="sk-cat-name">Dinner</span>
+            </a>
+            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert" class="sk-category-item">
+                <div class="sk-cat-circle">🍰</div>
+                <span class="sk-cat-name">Desserts</span>
+            </a>
+            <a asp-controller="Recipes" asp-action="Index" asp-route-category="Drinks" class="sk-category-item">
+                <div class="sk-cat-circle">🍹</div>
+                <span class="sk-cat-name">Drinks</span>
+            </a>
+            <a asp-controller="Recipes" asp-action="Index" class="sk-category-item">
+                <div class="sk-cat-circle">🌟</div>
+                <span class="sk-cat-name">All Recipes</span>
+            </a>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Featured Recipes Section -->
-<section class="py-5 bg-white">
-    <div class="container py-4">
-        <div class="text-center mb-5">
-            <p style="font-family: 'Herr Von Muellerhoff', cursive; font-size: 38px; color: #d19f68; margin-bottom: 0;">Chef's Special Selection</p>
-            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 38px); font-weight: 700;">Featured Gourmet Dishes</h2>
-            <div style="width: 50px; height: 3px; background: #d19f68; margin: 12px auto;"></div>
+<!-- Popular / Featured Recipes Grid (Matching Savoria Reference Layout) -->
+<section class="py-5" style="background-color: #ffffff;">
+    <div class="container py-3">
+        <div class="sk-section-header">
+            <p class="sk-section-subtitle">Chef's Signature Selection</p>
+            <h2 class="sk-section-title">Popular Gourmet Dishes</h2>
+            <div class="sk-section-divider"></div>
+
+            <!-- Quick Filter Links (Reference Style: [Breakfast] [Lunch] [Dinner]) -->
+            <div class="mt-3 d-flex justify-content-center gap-2 flex-wrap" style="font-size: 14px;">
+                <a asp-controller="Recipes" asp-action="Index" class="text-decoration-none px-3 py-1 rounded-pill" style="background: #f5ebe1; color: #c26747; font-weight: 600;">All</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast" class="text-decoration-none px-3 py-1 rounded-pill text-muted">Breakfast</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch" class="text-decoration-none px-3 py-1 rounded-pill text-muted">Lunch</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner" class="text-decoration-none px-3 py-1 rounded-pill text-muted">Dinner</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert" class="text-decoration-none px-3 py-1 rounded-pill text-muted">Dessert</a>
+            </div>
         </div>
 
         <div class="row g-4">
             @if (Model != null && Model.Any())
             {
+                var idx = 0;
                 foreach (var recipe in Model)
                 {
-                    <div class="col-lg-3 col-md-6 col-12 mb-4">
-                        <div class="recipe-home-card h-100">
-                            <div class="thumb">
+                    idx++;
+                    var badgeLabel = (idx % 2 == 1) ? "Best Seller" : "Hot";
+                    var badgeClass = (idx % 2 == 1) ? "bestseller" : "hot";
+
+                    <div class="col-lg-3 col-md-6 col-12 mb-2">
+                        <div class="sk-recipe-card">
+                            <div class="sk-card-img-wrap">
                                 <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id">
-                                    <img src="@recipe.ImageUrl" alt="@recipe.Title" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
+                                    <img src="@recipe.ImageUrl" alt="@recipe.Title" loading="lazy" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
                                 </a>
-                                <span class="cat-badge">@recipe.Category</span>
-                                <span class="time-badge"><i class="far fa-clock"></i> @(recipe.PrepTimeMinutes + recipe.CookTimeMinutes)m</span>
+                                <span class="sk-badge-pill @badgeClass">@badgeLabel</span>
+                                <span class="sk-time-pill">
+                                    <i class="far fa-clock"></i> @(recipe.PrepTimeMinutes + recipe.CookTimeMinutes)m
+                                </span>
                             </div>
-                            <div class="body">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="badge bg-light text-muted border">@recipe.Difficulty</span>
-                                    <span class="text-warning" style="font-size: 13px;">
-                                        <i class="fas fa-star"></i> <strong>@recipe.AverageRating</strong> (@recipe.TotalReviews)
+                            <div class="sk-card-content">
+                                <div class="sk-card-meta-top">
+                                    <span class="sk-card-cat">@recipe.Category</span>
+                                    <span class="sk-card-rating">
+                                        <i class="fas fa-star"></i> @recipe.AverageRating
                                     </span>
                                 </div>
-                                <h4 class="title">
+                                <h3 class="sk-card-title">
                                     <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id">@recipe.Title</a>
-                                </h4>
-                                <p class="desc">@recipe.Description</p>
-                                <div class="d-flex justify-content-between align-items-center pt-2 border-top text-muted" style="font-size: 12px;">
-                                    <span><i class="fas fa-utensils"></i> @recipe.Servings Servings</span>
-                                    <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id" style="color: #d19f68; font-weight: 600;">View Recipe &rarr;</a>
+                                </h3>
+                                <p class="sk-card-desc">@recipe.Description</p>
+                                <div class="sk-card-footer">
+                                    <span><i class="fas fa-user-friends me-1"></i> @recipe.Servings Servings</span>
+                                    <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id">
+                                        View Recipe &rarr;
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -89,58 +146,75 @@
             }
         </div>
 
-        <div class="text-center mt-3">
-            <a asp-controller="Recipes" asp-action="Index" class="btn btn-default btn-outline px-4 py-2">
-                Browse All Recipes &rarr;
+        <div class="text-center mt-5">
+            <a asp-controller="Recipes" asp-action="Index" class="btn btn-sk-outline px-4 py-2">
+                Browse Full Culinary Catalog &rarr;
             </a>
         </div>
     </div>
 </section>
 
-<!-- Story Section -->
-<section class="py-5" style="background: #faf8f5;">
+<!-- Artisanal Culinary Story & Chef Inspiration -->
+<section class="py-5" style="background-color: #faf7f2;">
     <div class="container py-4">
         <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0 text-center">
-                <img src="~/images/about/about4.jpg" alt="Kitchen Chef" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;" />
+            <div class="col-lg-6 col-12 mb-4 mb-lg-0 text-center">
+                <div class="position-relative d-inline-block">
+                    <img src="~/images/about/about4.jpg" alt="Kitchen Chef Cooking" class="img-fluid rounded-4 shadow-sm" style="max-height: 440px; width: 100%; object-fit: cover; border: 4px solid #ffffff;" />
+                    <div class="position-absolute bottom-0 start-0 p-3 m-3 rounded-3 shadow" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); text-align: left; max-width: 200px;">
+                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 16px;">100% Tested</h5>
+                        <small class="text-muted" style="font-size: 12px;">Verified measurements & foolproof steps</small>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6 ps-lg-4">
-                <p style="font-family: 'Herr Von Muellerhoff', cursive; font-size: 38px; color: #d19f68; margin-bottom: 0;">Our Culinary Story</p>
-                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 34px); margin-bottom: 20px;">Passion For Wholesome, Flavorful Food</h2>
-                <p style="color: #666; line-height: 1.8; margin-bottom: 18px;">
-                    Whether you are an aspiring amateur cook or a seasoned culinary enthusiast, Deliciousa provides clear, tested steps, verified measurements, and helpful cooking tips to make every meal memorable.
+            <div class="col-lg-6 col-12 ps-lg-5">
+                <p class="sk-section-subtitle text-start">Authentic Kitchen Heritage</p>
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 36px); color: #2c221e; margin-bottom: 18px;">
+                    Passion For Wholesome, Flavorful Food
+                </h2>
+                <p style="color: #786b64; line-height: 1.8; margin-bottom: 20px;">
+                    Whether you are cooking a quick weekday dinner or preparing a weekend feast for family, Deliciousa provides clear, tested steps, verified spice ratios, and chef secrets to guarantee kitchen success.
                 </p>
+
                 <div class="row g-3 mb-4">
                     <div class="col-6">
-                        <div class="p-3 bg-white rounded shadow-sm border text-center">
-                            <h3 class="fw-bold text-warning mb-1">100%</h3>
+                        <div class="p-3 bg-white rounded-3 shadow-sm border text-center" style="border-color: #ede3da !important;">
+                            <h3 class="fw-bold mb-1" style="color: #c26747;">100%</h3>
                             <small class="text-muted">Free Community Recipes</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="p-3 bg-white rounded shadow-sm border text-center">
-                            <h3 class="fw-bold text-warning mb-1">5 ★</h3>
+                        <div class="p-3 bg-white rounded-3 shadow-sm border text-center" style="border-color: #ede3da !important;">
+                            <h3 class="fw-bold mb-1" style="color: #e59819;">4.9 ★</h3>
                             <small class="text-muted">Home Cook Ratings</small>
                         </div>
                     </div>
                 </div>
-                <a asp-controller="Home" asp-action="about" class="btn btn-default btn-primary">About Our Kitchen</a>
+
+                <a asp-controller="Home" asp-action="about" class="btn btn-sk-primary">
+                    Learn More About Our Kitchen &rarr;
+                </a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Community Call-to-Action -->
-<section class="py-5 bg-white">
-    <div class="container py-3">
-        <div class="cta-box">
-            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.5vw, 34px); margin-bottom: 14px;">Share Your Favorite Recipe</h2>
-            <p style="max-width: 600px; margin: 0 auto 25px; color: #666; font-size: 16px;">
-                Got a mouth-watering recipe your family loves? Join Deliciousa, upload your photos and steps, and inspire thousands of fellow home cooks!
-            </p>
-            <a asp-controller="Recipes" asp-action="Create" class="btn btn-default btn-primary px-4 py-3 fw-bold">
-                + Publish Your Recipe Today
-            </a>
+<!-- Bottom Artisanal CTA Banner (Directly Matching Savoria Reference Bar) -->
+<section class="py-4" style="background-color: #faf7f2;">
+    <div class="container pb-4">
+        <div class="sk-bottom-banner text-center">
+            <div class="container">
+                <h2>Taste the Best, Share Your Recipe</h2>
+                <p>Got a signature dish your family adores? Upload your step-by-step recipe and inspire our community of food lovers!</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a asp-controller="Recipes" asp-action="Create" class="btn btn-sk-light">
+                        <i class="fas fa-plus-circle me-1" style="color: #c26747;"></i> + Share Your Recipe
+                    </a>
+                    <a asp-controller="Recipes" asp-action="Index" class="btn btn-sk-outline text-white border-white">
+                        Browse Recipes
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </section>

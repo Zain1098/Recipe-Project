@@ -5,13 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=5">
     <title>@(ViewData["Title"] ?? "Deliciousa - Artisanal Recipe Platform")</title>
     
+    <!-- SEO & Metadata -->
+    <meta name="description" content="Deliciousa - Discover, cook, and share artisanal recipes crafted with love by home chefs and culinary masters worldwide.">
+    <meta name="keywords" content="recipes, cooking, artisanal food, chef recipes, homemade meals, breakfast, dinner, desserts, drinks">
+    <meta name="author" content="Deliciousa Kitchen">
+    <link rel="canonical" href="https://recipe-project-ma0u.onrender.com/">
+
+    <!-- Open Graph (Facebook / WhatsApp / LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@(ViewData["Title"] ?? "Deliciousa - Artisanal Recipe Platform")">
+    <meta property="og:description" content="Discover, cook, and share world-class artisanal recipes with step-by-step instructions.">
+    <meta property="og:url" content="https://recipe-project-ma0u.onrender.com/">
+    <meta property="og:image" content="https://recipe-project-ma0u.onrender.com/images/header/header1.jpg">
+    <meta property="og:site_name" content="Deliciousa Recipes">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@(ViewData["Title"] ?? "Deliciousa - Artisanal Recipe Platform")">
+    <meta name="twitter:description" content="Discover, cook, and share world-class artisanal recipes with step-by-step instructions.">
+    <meta name="twitter:image" content="https://recipe-project-ma0u.onrender.com/images/header/header1.jpg">
+
     <!-- Favicons -->
     <link rel="shortcut icon" href="~/images/favicon.ico">
     <link rel="apple-touch-icon" sizes="72x72" href="~/images/android-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="~/images/apple-icon-144x144.png">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700&family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700&family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
 
     <!-- CSS Plugins -->
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
@@ -24,6 +44,21 @@
     <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/color/color-one.css">
     <link rel="stylesheet" href="~/css/responsive-fix.css">
+
+    <!-- AEO / Structured Data Schema.org (WebSite & Site Search) -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "WebSite",
+      "name": "Deliciousa Artisanal Recipes",
+      "url": "https://recipe-project-ma0u.onrender.com/",
+      "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "https://recipe-project-ma0u.onrender.com/Recipes?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -60,7 +95,7 @@
                         <!-- Header Right & Mobile Hamburger (Right) -->
                         <div class="col-6 col-xl-4 text-end">
                             <div class="d-flex align-items-center justify-content-end gap-3">
-                                <a asp-controller="Recipes" asp-action="Create" class="btn btn-default btn-primary header-action-btn" style="padding: 7px 16px; font-size: 13px;">
+                                <a asp-controller="Recipes" asp-action="Create" class="btn btn-sk-primary header-action-btn" style="padding: 7px 18px !important; font-size: 13px !important;">
                                     + Share Recipe
                                 </a>
 

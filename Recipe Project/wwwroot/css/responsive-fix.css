@@ -476,8 +476,455 @@ textarea {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #faf7f2;
 }
 
 .site-main-content {
     flex-grow: 1;
 }
+
+/* ================================================================
+   12. SAVORIA-INSPIRED ARTISANAL DESIGN SYSTEM (WARM CULINARY PALETTE)
+   ================================================================ */
+:root {
+    --sk-primary: #c26747;
+    --sk-primary-hover: #a95234;
+    --sk-primary-light: #fbeee9;
+    --sk-dark: #2c221e;
+    --sk-dark-secondary: #4a3b34;
+    --sk-cream: #faf7f2;
+    --sk-cream-surface: #f4ede4;
+    --sk-card-bg: #ffffff;
+    --sk-card-border: #ede3da;
+    --sk-pill-bg: #f5ebe1;
+    --sk-pill-hover: #eddccb;
+    --sk-text-muted: #786b64;
+    --sk-gold: #e59819;
+    --sk-radius-sm: 8px;
+    --sk-radius-md: 14px;
+    --sk-radius-lg: 20px;
+    --sk-radius-xl: 28px;
+    --sk-shadow-subtle: 0 4px 20px rgba(44, 34, 30, 0.06);
+    --sk-shadow-hover: 0 12px 32px rgba(44, 34, 30, 0.12);
+}
+
+/* Primary Button Styling */
+.btn-sk-primary {
+    background-color: var(--sk-primary) !important;
+    border-color: var(--sk-primary) !important;
+    color: #ffffff !important;
+    border-radius: var(--sk-radius-xl) !important;
+    font-weight: 600 !important;
+    padding: 10px 26px !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 14px rgba(194, 103, 71, 0.28);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none !important;
+}
+
+.btn-sk-primary:hover {
+    background-color: var(--sk-primary-hover) !important;
+    border-color: var(--sk-primary-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(194, 103, 71, 0.38);
+    color: #ffffff !important;
+}
+
+.btn-sk-outline {
+    background: transparent !important;
+    border: 1.5px solid var(--sk-primary) !important;
+    color: var(--sk-primary) !important;
+    border-radius: var(--sk-radius-xl) !important;
+    font-weight: 600 !important;
+    padding: 10px 26px !important;
+    transition: all 0.25s ease !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none !important;
+}
+
+.btn-sk-outline:hover {
+    background-color: var(--sk-primary) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+}
+
+.btn-sk-light {
+    background-color: #ffffff !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.8) !important;
+    color: var(--sk-dark) !important;
+    border-radius: var(--sk-radius-xl) !important;
+    font-weight: 600 !important;
+    padding: 10px 24px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s ease !important;
+}
+
+.btn-sk-light:hover {
+    background-color: var(--sk-cream) !important;
+    color: var(--sk-primary) !important;
+    transform: translateY(-2px);
+}
+
+/* 13. Artisanal Circular Categories (Like Savoria Reference) */
+.sk-category-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(14px, 3.5vw, 36px);
+    flex-wrap: wrap;
+    padding: 10px 0;
+}
+
+.sk-category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none !important;
+    group: cat-item;
+    transition: transform 0.25s ease;
+    cursor: pointer;
+}
+
+.sk-category-item:hover {
+    transform: translateY(-5px);
+}
+
+.sk-cat-circle {
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background-color: var(--sk-pill-bg);
+    border: 2px solid #ecdac9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(44, 34, 30, 0.05);
+}
+
+.sk-category-item:hover .sk-cat-circle,
+.sk-category-item.active .sk-cat-circle {
+    background-color: var(--sk-primary);
+    border-color: var(--sk-primary);
+    box-shadow: 0 8px 20px rgba(194, 103, 71, 0.3);
+    transform: scale(1.08);
+}
+
+.sk-cat-name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sk-dark);
+    margin: 0;
+    transition: color 0.2s ease;
+}
+
+.sk-category-item:hover .sk-cat-name,
+.sk-category-item.active .sk-cat-name {
+    color: var(--sk-primary);
+}
+
+@media (max-width: 575px) {
+    .sk-category-row {
+        gap: 16px;
+    }
+    .sk-cat-circle {
+        width: 66px;
+        height: 66px;
+        font-size: 26px;
+        margin-bottom: 6px;
+    }
+    .sk-cat-name {
+        font-size: 12px;
+    }
+}
+
+/* 14. Artisanal Recipe Card (Like Savoria Reference Grid) */
+.sk-recipe-card {
+    background: var(--sk-card-bg);
+    border-radius: var(--sk-radius-lg);
+    border: 1px solid var(--sk-card-border);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: var(--sk-shadow-subtle);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.sk-recipe-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--sk-shadow-hover);
+    border-color: #dfcdbf;
+}
+
+.sk-card-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background-color: #f0eae1;
+}
+
+.sk-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.sk-recipe-card:hover .sk-card-img-wrap img {
+    transform: scale(1.06);
+}
+
+/* Floating Badges on Cards */
+.sk-badge-pill {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(6px);
+    color: var(--sk-dark);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: var(--sk-radius-xl);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sk-badge-pill.hot {
+    background: #c26747;
+    color: #ffffff;
+}
+
+.sk-badge-pill.bestseller {
+    background: #2c221e;
+    color: #ffffff;
+}
+
+.sk-time-pill {
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    background: rgba(44, 34, 30, 0.82);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: var(--sk-radius-xl);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sk-bookmark-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+    color: #999;
+}
+
+.sk-bookmark-btn:hover {
+    transform: scale(1.1);
+    color: #e74c3c;
+    background: #ffffff;
+}
+
+.sk-card-content {
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.sk-card-meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.sk-card-cat {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sk-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.sk-card-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sk-gold);
+}
+
+.sk-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--sk-dark);
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.sk-card-title a {
+    color: var(--sk-dark);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.sk-card-title a:hover {
+    color: var(--sk-primary);
+}
+
+.sk-card-desc {
+    font-size: 13px;
+    color: var(--sk-text-muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.sk-card-footer {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #f1e9e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--sk-text-muted);
+}
+
+.sk-card-footer a {
+    color: var(--sk-primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.sk-card-footer a:hover {
+    text-decoration: underline;
+}
+
+/* 15. Modern Hero Search Box */
+.sk-hero-search {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 40px;
+    padding: 6px 8px 6px 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    max-width: 580px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.sk-hero-search input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    font-size: 15px !important;
+    color: var(--sk-dark);
+}
+
+.sk-hero-search input::placeholder {
+    color: #998f88;
+}
+
+.sk-hero-search button {
+    border-radius: 30px !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+}
+
+/* 16. Bottom Artisanal CTA Banner (Like Savoria Reference) */
+.sk-bottom-banner {
+    background-color: var(--sk-primary);
+    background-image: linear-gradient(135deg, #c26747 0%, #a44f32 100%);
+    color: #ffffff;
+    padding: clamp(36px, 5vw, 56px) 0;
+    border-radius: var(--sk-radius-lg);
+    box-shadow: 0 10px 30px rgba(194, 103, 71, 0.25);
+}
+
+.sk-bottom-banner h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3.8vw, 38px);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.sk-bottom-banner p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: clamp(14px, 2vw, 16px);
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+/* 17. Section Heading Standard */
+.sk-section-header {
+    text-align: center;
+    margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+.sk-section-subtitle {
+    font-family: 'Herr Von Muellerhoff', cursive;
+    font-size: clamp(32px, 4vw, 44px);
+    color: var(--sk-primary);
+    margin-bottom: -6px;
+    line-height: 1;
+}
+
+.sk-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 700;
+    color: var(--sk-dark);
+    margin-bottom: 10px;
+}
+
+.sk-section-divider {
+    width: 48px;
+    height: 3px;
+    background-color: var(--sk-primary);
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
