@@ -1,0 +1,120 @@
+@model Recipe_Project.ViewModels.RecipeCreateViewModel
+@{
+    ViewData["Title"] = "Edit Recipe - Deliciousa";
+    var recipeId = ViewBag.RecipeId as int? ?? 0;
+}
+
+<!-- Page Header Banner -->
+<div class="page-title-area bg-image bg-parallax2" style="background-image: url('/images/header/header1.jpg'); background-size: cover; background-position: center;">
+    <div class="container text-center">
+        <h2 class="page-title text-white fw-bold">Edit Recipe</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center bg-transparent mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Recipes" asp-action="Index" class="text-white-50">Recipes</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Edit</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container py-4 py-md-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-12">
+            <div class="form-card">
+                <h3 class="fw-bold mb-2" style="font-family: 'Playfair Display', serif;">Update Recipe Details</h3>
+                <p class="text-muted mb-4">Edit ingredients, instructions, cooking times, or replace photos.</p>
+
+                <form asp-controller="Recipes" asp-action="Edit" asp-route-id="@recipeId" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger"></div>
+                    }
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-bold">Recipe Title *</label>
+                        <input asp-for="Title" class="form-control" required />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-bold">Description *</label>
+                        <textarea asp-for="Description" rows="3" class="form-control" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4 col-12">
+                            <label asp-for="Category" class="form-label fw-bold">Category *</label>
+                            <select asp-for="Category" class="form-select">
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Drinks">Drinks</option>
+                                <option value="Fast Food">Fast Food</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <label asp-for="Cuisine" class="form-label fw-bold">Cuisine</label>
+                            <input asp-for="Cuisine" class="form-control" />
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <label asp-for="Difficulty" class="form-label fw-bold">Difficulty</label>
+                            <select asp-for="Difficulty" class="form-select">
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard / Master</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4 col-12">
+                            <label asp-for="PrepTimeMinutes" class="form-label fw-bold">Prep Time (mins) *</label>
+                            <input asp-for="PrepTimeMinutes" type="number" min="1" class="form-control" required />
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <label asp-for="CookTimeMinutes" class="form-label fw-bold">Cook Time (mins) *</label>
+                            <input asp-for="CookTimeMinutes" type="number" min="0" class="form-control" required />
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <label asp-for="Servings" class="form-label fw-bold">Servings *</label>
+                            <input asp-for="Servings" type="number" min="1" class="form-control" required />
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ExistingImageUrl))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold d-block">Current Photo</label>
+                            <img src="@Model.ExistingImageUrl" alt="Recipe" style="width: 110px; height: 80px; object-fit: cover; border-radius: 8px;" />
+                        </div>
+                    }
+
+                    <div class="mb-3">
+                        <label asp-for="ImageFile" class="form-label fw-bold">Replace Photo (Optional)</label>
+                        <input asp-for="ImageFile" type="file" accept="image/*" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="IngredientsRaw" class="form-label fw-bold">Ingredients (One per line) *</label>
+                        <textarea asp-for="IngredientsRaw" rows="6" class="form-control font-monospace" required></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="InstructionsRaw" class="form-label fw-bold">Instructions (One step per line) *</label>
+                        <textarea asp-for="InstructionsRaw" rows="7" class="form-control font-monospace" required></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipeId" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-default btn-primary px-4 py-2 fw-bold">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Access Denied - Deliciousa Recipes";
+}
+
+<!-- Page Header Banner -->
+<div class="page-title-area bg-image bg-parallax2" style="background-image: url('/images/header/header1.jpg'); background-size: cover; background-position: center;">
+    <div class="container text-center">
+        <h2 class="page-title text-white fw-bold">403 Forbidden</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center bg-transparent mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">Home</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Access Denied</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container py-5 text-center">
+    <div class="py-5">
+        <div style="font-size: 72px; color: #d19f68; line-height: 1;">🚫</div>
+        <h2 class="fw-bold mt-3 mb-2">Access Denied</h2>
+        <p class="text-muted mx-auto mb-4" style="max-width: 480px;">You do not have administrative permission to view or modify this resource.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-default btn-primary px-4 py-2">Return to Homepage</a>
+    </div>
+</div>

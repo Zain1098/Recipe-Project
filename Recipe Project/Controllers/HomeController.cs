@@ -1,21 +1,37 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Recipe_Project.Data;
 using Recipe_Project.Models;
 
 namespace Recipe_Project.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppDbContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(AppDbContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var featuredRecipes = await _context.Recipes
+                .Include(r => r.User)
+                .Include(r => r.Reviews)
+                .OrderByDescending(r => r.CreatedAt)
+                .Take(8)
+                .ToListAsync();
+
+            ViewBag.Categories = await _context.Recipes
+                .Select(r => r.Category)
+                .Distinct()
+                .ToListAsync();
+
+            return View(featuredRecipes);
         }
 
         public IActionResult Privacy()
@@ -25,19 +41,21 @@ namespace Recipe_Project.Controllers
 
         public IActionResult Signup()
         {
-            return View();
+            return RedirectToAction("Register", "Account");
         }
 
         public IActionResult Login()
         {
-            return View();
+            return RedirectToAction("Login", "Account");
         }
 
-        public IActionResult about()
+        public async Task<IActionResult> about()
         {
+            ViewBag.TotalRecipes = await _context.Recipes.CountAsync();
+            ViewBag.TotalUsers = await _context.Users.CountAsync();
+            ViewBag.TotalReviews = await _context.Reviews.CountAsync();
             return View();
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

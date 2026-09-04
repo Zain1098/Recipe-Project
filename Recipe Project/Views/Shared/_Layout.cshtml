@@ -1,46 +1,190 @@
-﻿<!-- CSS
-   ================================================== -->
-<link rel="stylesheet" href="~/css/bootstrap.min.css">
-<link rel="stylesheet" href="~/css/magnific-popup.css">
-<link rel="stylesheet" href="~/css/owl.carousel.min.css">
-<link rel="stylesheet" href="~/css/swiper.min.css">
-<link rel="stylesheet" href="~/css/pagepilling.min.css">
-<link rel="stylesheet" href="~/css/magnific-popup.css">
-<link rel="stylesheet" href="~/css/simple-scrollbar.css">
-<link rel="stylesheet" href="~/css/datepicker.min.css">
-<link rel="stylesheet" href="~/css/fontawesome.all.min.css">
-<link rel="stylesheet" href="~/css/icomoon.css">
-<link rel="stylesheet" href="~/css/style.css">
-<link rel="stylesheet" href="~/css/color/color-one.css">
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=5">
+    <title>@(ViewData["Title"] ?? "Deliciousa - Artisanal Recipe Platform")</title>
+    
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="~/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/images/android-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/images/apple-icon-144x144.png">
 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700&family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Plugins -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="~/css/icomoon.css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/swiper.min.css">
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/color/color-one.css">
+    <link rel="stylesheet" href="~/css/responsive-fix.css">
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
 
 <body>
-    @RenderBody()
+    <div class="site-wrapper">
+        <!-- Site Header -->
+        <header class="site-header default-header-style header-absolute intro-element">
+            <div class="header-top-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <!-- Socials / Left (Desktop) -->
+                        <div class="col-4 d-none d-xl-block">
+                            <div class="intro-socail-share">
+                                <div class="share-alt"><span class="fa fa-share-alt"></span></div>
+                                <div class="socail-share">
+                                    <a href="#"><span class="fab fa-facebook-f"></span></a>
+                                    <a href="#"><span class="fab fa-twitter"></span></a>
+                                    <a href="#"><span class="fab fa-instagram"></span></a>
+                                    <a href="#"><span class="fab fa-pinterest"></span></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Brand Logo (Center) -->
+                        <div class="col-6 col-xl-4 text-start text-xl-center">
+                            <div class="site-branding">
+                                <a asp-controller="Home" asp-action="Index">
+                                    <img src="~/images/logo/logo.png" alt="Deliciousa Logo" />
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Header Right & Mobile Hamburger (Right) -->
+                        <div class="col-6 col-xl-4 text-end">
+                            <div class="d-flex align-items-center justify-content-end gap-3">
+                                <a asp-controller="Recipes" asp-action="Create" class="btn btn-default btn-primary header-action-btn" style="padding: 7px 16px; font-size: 13px;">
+                                    + Share Recipe
+                                </a>
+
+                                <!-- Mobile Hamburger Toggle Button -->
+                                <div class="hamburger-menus" id="mobileMenuToggle" aria-label="Toggle navigation" role="button">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation Menu -->
+            <partial name="Navbar" />
+
+            <!-- Mobile Slide-Out Drawer -->
+            <div class="mobile-sidebar-menu" id="mobileSidebar">
+                <div class="overlaybg" id="mobileOverlay"></div>
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+                    <img src="~/images/logo/logo.png" alt="Logo" style="max-height: 36px;" />
+                    <span class="mobile-menu-close" id="mobileMenuClose">&times;</span>
+                </div>
+
+                <ul class="mobile-nav-list">
+                    <li><a asp-controller="Home" asp-action="Index">🏠 Home</a></li>
+                    <li><a asp-controller="Recipes" asp-action="Index">🍲 All Recipes</a></li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="$('#mobileCatSubmenu').slideToggle(200)">
+                            📂 Categories <i class="fas fa-chevron-down float-end mt-1 small"></i>
+                        </a>
+                        <ul class="mobile-sub-list" id="mobileCatSubmenu" style="display: none;">
+                            <li><a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast">🥞 Breakfast</a></li>
+                            <li><a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch">🥗 Lunch</a></li>
+                            <li><a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner">🍲 Dinner</a></li>
+                            <li><a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert">🍰 Dessert</a></li>
+                            <li><a asp-controller="Recipes" asp-action="Index" asp-route-category="Drinks">🍹 Drinks</a></li>
+                        </ul>
+                    </li>
+                    <li><a asp-controller="Recipes" asp-action="Create">➕ Share a Recipe</a></li>
+                    <li><a asp-controller="Home" asp-action="about">👨‍🍳 About Our Kitchen</a></li>
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li class="mt-3 pt-3 border-top border-secondary">
+                            <span class="text-warning small fw-bold">Signed in as:</span>
+                            <div class="text-white fw-bold">@User.Identity.Name</div>
+                        </li>
+                        <li><a asp-controller="Recipes" asp-action="MyRecipes">📖 My Created Recipes</a></li>
+                        <li><a asp-controller="Recipes" asp-action="MySaved">❤️ Saved Recipes</a></li>
+                        <li><a asp-controller="Account" asp-action="Logout" class="text-danger">🚪 Sign Out</a></li>
+                    }
+                    else
+                    {
+                        <li class="mt-3 pt-3 border-top border-secondary"><a asp-controller="Account" asp-action="Login">🔑 Sign In</a></li>
+                        <li><a asp-controller="Account" asp-action="Register" class="text-warning">📝 Register Free</a></li>
+                    }
+                </ul>
+            </div>
+        </header>
+
+        <div id="sticky-header"></div>
+
+        <!-- Global Toast Alerts -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="container position-relative" style="z-index: 1050; margin-top: 90px; margin-bottom: -70px;">
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="container position-relative" style="z-index: 1050; margin-top: 90px; margin-bottom: -70px;">
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+
+        <!-- Page Content -->
+        <main class="site-main-content">
+            @RenderBody()
+        </main>
+
+        <!-- Master Footer -->
+        <partial name="Footer" />
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/swiper.min.js"></script>
+    <script src="~/js/main.js"></script>
+
+    <!-- Mobile Drawer Script -->
+    <script>
+        $(document).ready(function () {
+            function toggleMobileMenu() {
+                $('#mobileSidebar').toggleClass('sidemenu-active');
+                $('#mobileMenuToggle').toggleClass('click-menu');
+                $('body').toggleClass('sidemenu-active');
+            }
+
+            $('#mobileMenuToggle').on('click', function (e) {
+                e.stopPropagation();
+                toggleMobileMenu();
+            });
+
+            $('#mobileMenuClose, #mobileOverlay').on('click', function () {
+                $('#mobileSidebar').removeClass('sidemenu-active');
+                $('#mobileMenuToggle').removeClass('click-menu');
+                $('body').removeClass('sidemenu-active');
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
-
-
-<!-- All The JS Files
-	================================================== -->
-<script src="~/js/jquery.js"></script>
-<script src="~/js/popper.min.js"></script>
-<script src="~/js/bootstrap.min.js"></script>
-<script src="~/js/imagesloaded.pkgd.min.js"></script>
-<script src="~/js/jquery.validate.min.js"></script>
-<script src="~/js/theia-sticky-sidebar.min.js"></script>
-<script src="~/js/ResizeSensor.min.js"></script>
-<script src="~/js/owl.carousel.min.js"></script>
-<script src="~/js/swiper.min.js"></script>
-<script src="~/js/pagepilling.min.js"></script>
-<script src="~/js/jarallax.min.js"></script>
-<script src="~/js/masonry.pkgd.min.js"></script>
-<script src="~/js/jquery.fitvids.js"></script>
-<script src="~/js/jquery.magnific-popup.min.js"></script>
-<script src="~/js/simple-scrollbar.min.js"></script>
-<script src="~/js/scrolla.jquery.min.js"></script>
-<script src="~/js/wan-spinner.js"></script>
-<script src="~/js/jquery.nice-select.min.js"></script>
-<script src="~/js/kinetic.js"></script>
-<script src="~/js/jquery.final-countdown.min.js"></script>
-<script src="~/js/datepicker.min.js"></script>
-<script src="~/js/email-popup.js"></script>
-<script src="~/js/main.js"></script>
+</html>

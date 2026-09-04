@@ -1,0 +1,122 @@
+@model IEnumerable<Recipe_Project.Models.Recipe>
+@{
+    ViewData["Title"] = ViewBag.PageHeading ?? "Explore Recipes - Deliciousa";
+    var categories = ViewBag.AllCategories as List<string> ?? new List<string>();
+    var currentCat = ViewBag.CurrentCategory as string ?? "All";
+    var currentDiff = ViewBag.CurrentDifficulty as string ?? "All";
+    var currentSearch = ViewBag.CurrentSearch as string ?? "";
+    var currentSort = ViewBag.CurrentSort as string ?? "newest";
+}
+
+<!-- Page Header Banner -->
+<div class="page-title-area bg-image bg-parallax2" style="background-image: url('/images/header/header1.jpg'); background-size: cover; background-position: center;">
+    <div class="container text-center">
+        <h2 class="page-title text-white fw-bold">@(ViewBag.PageHeading ?? "Discover Delicious Recipes")</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center bg-transparent mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">Home</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Recipes</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Filter & Search Section -->
+    <div class="p-3 p-md-4 mb-4 rounded-3 border" style="background: #faf8f5;">
+        <form method="get" asp-controller="Recipes" asp-action="Index">
+            <div class="row g-2 align-items-center">
+                <div class="col-lg-5 col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" name="search" value="@currentSearch" class="form-control border-start-0" placeholder="Search title, ingredients, cuisine..." />
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <select name="category" class="form-select">
+                        <option value="All">All Categories</option>
+                        @foreach (var cat in categories)
+                        {
+                            if (cat == currentCat)
+                            {
+                                <option value="@cat" selected="selected">@cat</option>
+                            }
+                            else
+                            {
+                                <option value="@cat">@cat</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <select name="sort" class="form-select">
+                        <option value="newest" selected="@(currentSort == "newest" ? "selected" : null)">Newest</option>
+                        <option value="popular" selected="@(currentSort == "popular" ? "selected" : null)">Most Popular</option>
+                        <option value="rating" selected="@(currentSort == "rating" ? "selected" : null)">Top Rated</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-12">
+                    <button type="submit" class="btn btn-default btn-primary w-100 py-2">Filter</button>
+                </div>
+            </div>
+
+            <!-- Horizontal Scrollable Category Pills -->
+            <div class="mt-3 filter-pills-scroll">
+                <a asp-controller="Recipes" asp-action="Index" class="filter-btn @(currentCat == "All" ? "active" : "")">All</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast" class="filter-btn @(currentCat == "Breakfast" ? "active" : "")">🥞 Breakfast</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch" class="filter-btn @(currentCat == "Lunch" ? "active" : "")">🥗 Lunch</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner" class="filter-btn @(currentCat == "Dinner" ? "active" : "")">🍲 Dinner</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert" class="filter-btn @(currentCat == "Dessert" ? "active" : "")">🍰 Dessert</a>
+                <a asp-controller="Recipes" asp-action="Index" asp-route-category="Drinks" class="filter-btn @(currentCat == "Drinks" ? "active" : "")">🍹 Drinks</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Recipes Grid -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <img src="~/images/foodmenu/small/1.png" alt="Empty" style="width: 80px; opacity: 0.5;" />
+            <h4 class="mt-3 fw-bold">No Recipes Found</h4>
+            <p class="text-muted">Try searching with a different keyword or explore all categories.</p>
+            <a asp-controller="Recipes" asp-action="Index" class="btn btn-default btn-primary mt-2">View All Recipes</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4 mb-5">
+            @foreach (var recipe in Model)
+            {
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <div class="recipe-card">
+                        <div class="recipe-thumb">
+                            <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id">
+                                <img src="@recipe.ImageUrl" alt="@recipe.Title" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
+                            </a>
+                            <span class="recipe-badge">@recipe.Category</span>
+                            <div class="recipe-time-badge">
+                                <i class="far fa-clock"></i> @(recipe.PrepTimeMinutes + recipe.CookTimeMinutes) mins
+                            </div>
+                        </div>
+                        <div class="recipe-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-light text-dark border">@recipe.Difficulty</span>
+                                <div class="rating text-warning" style="font-size: 13px;">
+                                    <i class="fas fa-star"></i> <strong>@recipe.AverageRating</strong> <span class="text-muted">(@recipe.TotalReviews)</span>
+                                </div>
+                            </div>
+                            <h4 class="recipe-title">
+                                <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id">@recipe.Title</a>
+                            </h4>
+                            <p class="recipe-desc">@recipe.Description</p>
+                            <div class="recipe-meta">
+                                <span><i class="fas fa-utensils text-muted me-1"></i> @recipe.Servings servings</span>
+                                <span><i class="far fa-eye text-muted me-1"></i> @recipe.ViewsCount views</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

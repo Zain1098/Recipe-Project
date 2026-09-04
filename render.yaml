@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: recipe-project
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__DefaultConnection
+        value: Data Source=/app/data/recipes.db
+    disk:
+      name: recipe-data
+      mountPath: /app/data
+      sizeGB: 1

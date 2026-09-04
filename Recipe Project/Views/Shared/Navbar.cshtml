@@ -1,4 +1,4 @@
-﻿<div class="navigation-area">
+<div class="navigation-area">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -7,421 +7,95 @@
                         <nav class="navigation">
                             <div class="menu-wrapper">
                                 <div class="menu-content">
-                                    
                                     <ul class="mainmenu">
-                                        <li> <a class="active" asp-controller="Home" asp-action="Index">Home</a></li>
+                                        <li>
+                                            <a asp-controller="Home" asp-action="Index">Home</a>
+                                        </li>
                                         <li class="megamenu">
-                                            <a href="#">Menu</a>
+                                            <a asp-controller="Recipes" asp-action="Index">Recipes <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i></a>
                                             <ul class="sub-menu megamenu-main megamenu-carousel-menu">
                                                 <li>
                                                     <div class="megamenu-carousel carousel-nav-dots owl-carousel">
-                                                        <a href="#" class="food-menu-item">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast" class="food-menu-item">
                                                             <figure class="food-thumb">
-                                                                <img src="~/images/foodmenu/menu/1.jpg"
-                                                                     alt="Thmubnail">
+                                                                <img src="~/images/foodmenu/menu/1.jpg" alt="Breakfast">
                                                                 <div class="overlay">
                                                                     <h3 class="title">Breakfast</h3>
-                                                                    <!--./ title -->
                                                                 </div>
                                                             </figure>
-                                                            <!--./ food-thumb -->
                                                         </a>
-                                                        <a href="#" class="food-menu-item">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch" class="food-menu-item">
                                                             <figure class="food-thumb">
-                                                                <img src="~/images/foodmenu/menu/2.jpg"
-                                                                     alt="Thmubnail">
+                                                                <img src="~/images/foodmenu/menu12/food1.jpg" alt="Lunch">
                                                                 <div class="overlay">
-                                                                    <h3 class="title">Launch</h3>
-                                                                    <!--./ title -->
+                                                                    <h3 class="title">Lunch</h3>
                                                                 </div>
                                                             </figure>
-                                                            <!--./ food-thumb -->
                                                         </a>
-                                                        <a href="#" class="food-menu-item">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner" class="food-menu-item">
                                                             <figure class="food-thumb">
-                                                                <img src="~/images/foodmenu/menu/3.jpg"
-                                                                     alt="Thmubnail">
+                                                                <img src="~/images/foodmenu/menu12/food3.jpg" alt="Dinner">
                                                                 <div class="overlay">
                                                                     <h3 class="title">Dinner</h3>
-                                                                    <!--./ title -->
                                                                 </div>
                                                             </figure>
-                                                            <!--./ food-thumb -->
                                                         </a>
-                                                        <a href="#" class="food-menu-item">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Drinks" class="food-menu-item">
                                                             <figure class="food-thumb">
-                                                                <img src="~/images/foodmenu/menu/4.jpg"
-                                                                     alt="Thmubnail">
+                                                                <img src="~/images/foodmenu/menu/4.jpg" alt="Drinks">
                                                                 <div class="overlay">
                                                                     <h3 class="title">Drinks</h3>
-                                                                    <!--./ title -->
                                                                 </div>
                                                             </figure>
-                                                            <!--./ food-thumb -->
                                                         </a>
-                                                        <a href="#" class="food-menu-item">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert" class="food-menu-item">
                                                             <figure class="food-thumb">
-                                                                <img src="~/images/foodmenu/menu/5.jpg"
-                                                                     alt="Thmubnail">
+                                                                <img src="~/images/foodmenu/menu/5.jpg" alt="Dessert">
                                                                 <div class="overlay">
                                                                     <h3 class="title">Dessert</h3>
-                                                                    <!--./ title -->
                                                                 </div>
                                                             </figure>
-                                                            <!--./ food-thumb -->
-                                                        </a>
-                                                        <a href="#" class="food-menu-item">
-                                                            <figure class="food-thumb">
-                                                                <img src="~/images/foodmenu/menu/1.jpg"
-                                                                     alt="Thmubnail">
-                                                                <div class="overlay">
-                                                                    <h3 class="title">Breakfast</h3>
-                                                                    <!--./ title -->
-                                                                </div>
-                                                            </figure>
-                                                            <!--./ food-thumb -->
                                                         </a>
                                                     </div>
                                                 </li>
                                             </ul>
-                                            <!--/.mega-menu-content-->
                                         </li>
                                         <li>
-                                            <a href="#">Reservation</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="reservation-v1.html">Reservation one</a></li>
-                                                <li><a href="reservation-v2.html">Reservation Two</a></li>
-                                                <li><a href="reservation-v3.html">Reservation Three</a></li>
-                                                <li><a href="reservation-v4.html">Reservation Four</a></li>
-                                                <li><a href="reservation-v5.html">Reservation Five</a></li>
-                                            </ul>
+                                            <a asp-controller="Recipes" asp-action="Create">+ Share Recipe</a>
                                         </li>
-                                        <li class="megamenu">
-                                            <a href="#">shop</a>
-                                            <ul class="sub-menu megamenu-main">
-                                                <li>
-                                                    <div class="megamenu-wrapper">
-                                                        <div class="container megamenu-container">
-                                                            <div class="row">
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Food
-                                                                            Menu Group
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="food-menu-v1.html">
-                                                                                    Food
-                                                                                    Menu One
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v2.html">
-                                                                                    Food
-                                                                                    Menu Two
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v3.html">
-                                                                                    Food
-                                                                                    Menu Three
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v4.html">
-                                                                                    Food
-                                                                                    Menu Four
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v5.html">
-                                                                                    Food
-                                                                                    Menu Five
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v6.html">
-                                                                                    Food
-                                                                                    Menu Six
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Food
-                                                                            Menu Group
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="food-menu-v7.html">
-                                                                                    Food
-                                                                                    Menu Seven
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v8.html">
-                                                                                    Food
-                                                                                    Menu Eight
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v9.html">
-                                                                                    Food
-                                                                                    Menu Nine
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v10.html">
-                                                                                    Food
-                                                                                    Menu Ten
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v11.html">
-                                                                                    Food
-                                                                                    Menu eleven
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v12.html">
-                                                                                    Food
-                                                                                    Menu Twelve
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Food
-                                                                            Menu Group
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="food-menu-v13.html">
-                                                                                    Food
-                                                                                    Menu Thirteen
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v14.html">
-                                                                                    Food
-                                                                                    Menu Fourteen
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="food-menu-v15.html">
-                                                                                    Food
-                                                                                    Menu Fifteen
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="single-food.html">
-                                                                                    Single
-                                                                                    Food Menu One
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="single-food-v2.html">
-                                                                                    Single
-                                                                                    Food Menu Two
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="single-food-v3.html">
-                                                                                    Single
-                                                                                    Food Menu Three
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Food
-                                                                            Menu Details
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="single-food-v4.html">
-                                                                                    Single
-                                                                                    Food Menu Four
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="cart.html">
-                                                                                    Food
-                                                                                    Cart
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="wishlist.html">
-                                                                                    Food
-                                                                                    Wishlist
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="checkout.html">
-                                                                                    Food
-                                                                                    Checkout
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
+                                        <li>
+                                            <a asp-controller="Home" asp-action="about">About Us</a>
                                         </li>
-                                        <li class="megamenu">
-                                            <a href="#">Pages</a>
-                                            <ul class="sub-menu megamenu-main">
-                                                <li>
-                                                    <div class="megamenu-wrapper">
-                                                        <div class="container megamenu-container">
-                                                            <div class="row">
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Blog
-                                                                            Pages
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="blog.html">
-                                                                                    Blog
-                                                                                    Classic
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="blog-grid.html">
-                                                                                    Blog
-                                                                                    Grid
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="blog-list.html">
-                                                                                    Blog
-                                                                                    List
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="blog-masonry.html">
-                                                                                    Blog
-                                                                                    Masonry
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="blog-single.html">
-                                                                                    Blog
-                                                                                    Details
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Inner
-                                                                            Pages
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="event.html">Events</a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="chef.html">Team</a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="event-calendar.html">
-                                                                                    Event
-                                                                                    Calender
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="event-single.html">
-                                                                                    Event
-                                                                                    Details
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="single-chef.html">
-                                                                                    Team
-                                                                                    Details
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Inner
-                                                                            Pages
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="services.html">Services</a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="gallery.html">Gallery</a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a asp-controller="Home" asp-action="Login">
-                                                                                    Sign
-                                                                                    In
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 megamenu-column">
-                                                                    <div class="megamenu-column-inner">
-                                                                        <h3 class="megamenu-heading">
-                                                                            Inner
-                                                                            Pages
-                                                                        </h3>
-                                                                        <ul class="custom-megamenu">
-                                                                            <li>
-                                                                                <a href="coming-soon.html">
-                                                                                    Coming
-                                                                                    Soon
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="404.html">
-                                                                                    404
-                                                                                    Error
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li> <a asp-controller="Home" asp-action="about">about</a> </li>
-                                        <li><a href="contact.html">contact</a></li>
-                                    </ul> <!-- /.menu-list -->
-                                </div> <!-- /.hours-content-->
-                            </div><!-- /.menu-wrapper -->
+                                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                        {
+                                            <li>
+                                                <a href="#" style="color: #d19f68; font-weight: 600;">
+                                                    <i class="far fa-user-circle"></i> @User.Identity.Name
+                                                </a>
+                                                <ul class="sub-menu">
+                                                    <li><a asp-controller="Recipes" asp-action="MyRecipes"><i class="fas fa-book-open"></i> My Recipes</a></li>
+                                                    <li><a asp-controller="Recipes" asp-action="MySaved"><i class="fas fa-heart"></i> Saved Recipes</a></li>
+                                                    <li><a asp-controller="Recipes" asp-action="Create"><i class="fas fa-plus"></i> Add New Recipe</a></li>
+                                                    <li><a asp-controller="Account" asp-action="Logout" style="color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+                                                </ul>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a asp-controller="Account" asp-action="Login">Sign In</a>
+                                            </li>
+                                            <li>
+                                                <a asp-controller="Account" asp-action="Register" style="color: #d19f68; font-weight: 600;">Register</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
                         </nav>
-                       
                     </div>
-                </div><!-- /.site-navigation -->
-            </div><!-- /.col-12 -->
-        </div><!-- /.row -->
-    </div><!-- /.container -->
-</div><!-- /.navigation-area -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
