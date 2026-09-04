@@ -11,50 +11,65 @@
                                         <li>
                                             <a asp-controller="Home" asp-action="Index">Home</a>
                                         </li>
-                                        <li class="megamenu">
-                                            <a asp-controller="Recipes" asp-action="Index">Recipes <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i></a>
-                                            <ul class="sub-menu megamenu-main megamenu-carousel-menu">
+                                        <li class="megamenu position-relative">
+                                            <a asp-controller="Recipes" asp-action="Index">
+                                                Recipes <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 3px;"></i>
+                                            </a>
+                                            <ul class="sub-menu megamenu-main megamenu-grid-menu">
                                                 <li>
-                                                    <div class="megamenu-carousel carousel-nav-dots owl-carousel">
-                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast" class="food-menu-item">
-                                                            <figure class="food-thumb">
+                                                    <div class="megamenu-recipe-grid">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Breakfast" class="megamenu-recipe-item">
+                                                            <div class="thumb-wrap">
                                                                 <img src="~/images/foodmenu/menu/1.jpg" alt="Breakfast">
-                                                                <div class="overlay">
-                                                                    <h3 class="title">Breakfast</h3>
-                                                                </div>
-                                                            </figure>
+                                                            </div>
+                                                            <div class="info">
+                                                                <span class="badge-cat">Breakfast</span>
+                                                                <h4 class="title">Pancakes & Shakshuka</h4>
+                                                            </div>
                                                         </a>
-                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch" class="food-menu-item">
-                                                            <figure class="food-thumb">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Lunch" class="megamenu-recipe-item">
+                                                            <div class="thumb-wrap">
                                                                 <img src="~/images/foodmenu/menu12/food1.jpg" alt="Lunch">
-                                                                <div class="overlay">
-                                                                    <h3 class="title">Lunch</h3>
-                                                                </div>
-                                                            </figure>
+                                                            </div>
+                                                            <div class="info">
+                                                                <span class="badge-cat">Lunch</span>
+                                                                <h4 class="title">Creamy Tuscan Pasta</h4>
+                                                            </div>
                                                         </a>
-                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner" class="food-menu-item">
-                                                            <figure class="food-thumb">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dinner" class="megamenu-recipe-item">
+                                                            <div class="thumb-wrap">
                                                                 <img src="~/images/foodmenu/menu12/food3.jpg" alt="Dinner">
-                                                                <div class="overlay">
-                                                                    <h3 class="title">Dinner</h3>
-                                                                </div>
-                                                            </figure>
+                                                            </div>
+                                                            <div class="info">
+                                                                <span class="badge-cat">Dinner</span>
+                                                                <h4 class="title">Royal Dum Biryani</h4>
+                                                            </div>
                                                         </a>
-                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Drinks" class="food-menu-item">
-                                                            <figure class="food-thumb">
-                                                                <img src="~/images/foodmenu/menu/4.jpg" alt="Drinks">
-                                                                <div class="overlay">
-                                                                    <h3 class="title">Drinks</h3>
-                                                                </div>
-                                                            </figure>
-                                                        </a>
-                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert" class="food-menu-item">
-                                                            <figure class="food-thumb">
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Dessert" class="megamenu-recipe-item">
+                                                            <div class="thumb-wrap">
                                                                 <img src="~/images/foodmenu/menu/5.jpg" alt="Dessert">
-                                                                <div class="overlay">
-                                                                    <h3 class="title">Dessert</h3>
-                                                                </div>
-                                                            </figure>
+                                                            </div>
+                                                            <div class="info">
+                                                                <span class="badge-cat">Dessert</span>
+                                                                <h4 class="title">Molten Lava Cake</h4>
+                                                            </div>
+                                                        </a>
+                                                        <a asp-controller="Recipes" asp-action="Index" asp-route-category="Drinks" class="megamenu-recipe-item">
+                                                            <div class="thumb-wrap">
+                                                                <img src="~/images/foodmenu/menu/4.jpg" alt="Drinks">
+                                                            </div>
+                                                            <div class="info">
+                                                                <span class="badge-cat">Drinks</span>
+                                                                <h4 class="title">Mango Mint Mojito</h4>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="megamenu-bottom-bar">
+                                                        <a asp-controller="Recipes" asp-action="Index" class="view-all-link">
+                                                            Browse All Recipes &rarr;
+                                                        </a>
+                                                        <a asp-controller="Recipes" asp-action="Create" class="add-recipe-link">
+                                                            + Submit a Recipe
                                                         </a>
                                                     </div>
                                                 </li>

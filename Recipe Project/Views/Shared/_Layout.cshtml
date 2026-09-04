@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="~/css/magnific-popup.css">
     <link rel="stylesheet" href="~/css/owl.carousel.min.css">
     <link rel="stylesheet" href="~/css/swiper.min.css">
-    <link rel="stylesheet" href="~/css/nice-select.css">
+    <link rel="stylesheet" href="~/css/datepicker.min.css">
     <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/color/color-one.css">
     <link rel="stylesheet" href="~/css/responsive-fix.css">
@@ -159,8 +159,20 @@
     <script src="~/js/jquery.js"></script>
     <script src="~/js/popper.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/imagesloaded.pkgd.min.js"></script>
+    <script src="~/js/datepicker.min.js"></script>
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/swiper.min.js"></script>
+
+    <!-- Safe fallbacks to prevent console errors -->
+    <script>
+        if (!$.fn.datepicker) $.fn.datepicker = function() { return this; };
+        if (!$.fn.imagesLoaded) $.fn.imagesLoaded = function(cb) { if(cb) cb(); return this; };
+        if (!$.fn.niceSelect) $.fn.niceSelect = function() { return this; };
+    </script>
+
     <script src="~/js/main.js"></script>
 
     <!-- Mobile Drawer Script -->

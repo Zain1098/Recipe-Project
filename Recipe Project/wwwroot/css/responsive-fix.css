@@ -152,7 +152,186 @@ img {
     color: #d19f68;
 }
 
-/* 3. Page Title Padding (Fixes header overlap on inner pages) */
+/* 3. Mega Menu Hover Dropdown Fix (Replaces Broken Owl Carousel) */
+.mainmenu li.megamenu {
+    position: relative !important;
+}
+
+.site-navigation .mainmenu > li.megamenu:hover > .megamenu-grid-menu {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(0) !important;
+    display: block !important;
+}
+
+.megamenu-grid-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(12px) !important;
+    width: 900px !important;
+    max-width: 95vw !important;
+    background: #ffffff !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18) !important;
+    border-radius: 12px !important;
+    padding: 22px !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    z-index: 99999 !important;
+    border: 1px solid #eee !important;
+    list-style: none !important;
+    margin: 0 !important;
+}
+
+.megamenu-recipe-grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 14px !important;
+    margin-bottom: 14px !important;
+}
+
+.megamenu-recipe-item {
+    display: block !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #faf8f5 !important;
+    border: 1px solid #f0ece6 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.megamenu-recipe-item:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.1) !important;
+    border-color: #d19f68 !important;
+}
+
+.megamenu-recipe-item .thumb-wrap {
+    height: 95px !important;
+    overflow: hidden !important;
+}
+
+.megamenu-recipe-item .thumb-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.35s ease !important;
+}
+
+.megamenu-recipe-item:hover .thumb-wrap img {
+    transform: scale(1.08) !important;
+}
+
+.megamenu-recipe-item .info {
+    padding: 8px 10px !important;
+    text-align: center !important;
+}
+
+.megamenu-recipe-item .badge-cat {
+    display: inline-block !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    color: #d19f68 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.megamenu-recipe-item .title {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #222 !important;
+    margin: 2px 0 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.megamenu-bottom-bar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-top: 1px solid #f0ece6 !important;
+    padding-top: 12px !important;
+    font-size: 13px !important;
+}
+
+.megamenu-bottom-bar a {
+    color: #d19f68 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+.megamenu-bottom-bar a:hover {
+    color: #b07c45 !important;
+}
+
+/* 4. Hero Section Video Sizing & Perfect Alignment */
+.video-bg {
+    position: relative !important;
+    width: 100% !important;
+    height: 85vh !important;
+    min-height: 540px !important;
+    max-height: 820px !important;
+    overflow: hidden !important;
+    background: #111 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.video-bg video {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+}
+
+.video-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.7) 100%) !important;
+    z-index: 2 !important;
+}
+
+.hero-caption {
+    position: relative !important;
+    z-index: 3 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 120px 20px 40px !important;
+}
+
+.hero-title-responsive {
+    font-size: clamp(26px, 5.5vw, 48px) !important;
+    line-height: 1.25 !important;
+}
+
+.hero-subtitle-responsive {
+    font-size: clamp(28px, 6vw, 52px) !important;
+}
+
+.hero-desc-responsive {
+    font-size: clamp(14px, 3vw, 18px) !important;
+    padding: 0 10px !important;
+}
+
+/* 5. Page Title Padding (Fixes header overlap on inner pages) */
 .page-title-area {
     padding-top: 170px !important;
     padding-bottom: 70px !important;
@@ -176,7 +355,7 @@ img {
     }
 }
 
-/* 4. Responsive Breakpoints for Navigation (< 1200px) */
+/* 6. Responsive Breakpoints for Navigation (< 1200px) */
 @media (max-width: 1199px) {
     .navigation-area {
         display: none !important;
@@ -198,26 +377,7 @@ img {
     }
 }
 
-/* 5. Responsive Hero Typography on Homepage */
-.video-bg {
-    min-height: 520px;
-}
-
-.hero-title-responsive {
-    font-size: clamp(26px, 5.5vw, 48px) !important;
-    line-height: 1.25 !important;
-}
-
-.hero-subtitle-responsive {
-    font-size: clamp(28px, 6vw, 52px) !important;
-}
-
-.hero-desc-responsive {
-    font-size: clamp(14px, 3vw, 18px) !important;
-    padding: 0 10px;
-}
-
-/* 6. Responsive Recipe Cards & Grids */
+/* 7. Responsive Recipe Cards & Grids */
 .recipe-card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -233,7 +393,7 @@ img {
     }
 }
 
-/* 7. Responsive Recipe Details Meta Box */
+/* 8. Responsive Recipe Details Meta Box */
 .recipe-meta-box {
     display: flex;
     flex-wrap: wrap;
@@ -262,7 +422,7 @@ img {
     }
 }
 
-/* 8. Responsive Form Cards (Login, Register, Recipe Create/Edit) */
+/* 9. Responsive Form Cards (Login, Register, Recipe Create/Edit) */
 .form-card, .user-register-area {
     width: 100%;
 }
@@ -289,7 +449,7 @@ textarea {
     font-size: 16px !important;
 }
 
-/* 9. Responsive Filter Buttons & Pills */
+/* 10. Responsive Filter Buttons & Pills */
 .filter-pills-scroll {
     display: flex;
     flex-wrap: wrap;
@@ -311,7 +471,7 @@ textarea {
     }
 }
 
-/* 10. Sticky Footer & Layout Flex */
+/* 11. Sticky Footer & Layout Flex */
 .site-wrapper {
     display: flex;
     flex-direction: column;
