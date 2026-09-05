@@ -22,5 +22,12 @@ namespace Recipe_Project.ViewModels
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Display(Name = "I am a Professional Chef / Culinary Creator")]
+        public bool RegisterAsChef { get; set; } = false;
+
+        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        [Display(Name = "Chef Title / Culinary Specialty")]
+        public string? ChefTitle { get; set; }
     }
 }

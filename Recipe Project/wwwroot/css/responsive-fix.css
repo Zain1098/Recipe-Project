@@ -152,9 +152,13 @@ img {
     color: #d19f68;
 }
 
-/* 3. Mega Menu Hover Dropdown Fix (Replaces Broken Owl Carousel) */
-.mainmenu li.megamenu {
+/* 3. Mega Menu Hover Dropdown Fix - Centered across container */
+.navigation-area .container {
     position: relative !important;
+}
+
+.site-navigation .mainmenu > li.megamenu {
+    position: static !important;
 }
 
 .site-navigation .mainmenu > li.megamenu:hover > .megamenu-grid-menu {
@@ -169,17 +173,17 @@ img {
     top: 100% !important;
     left: 50% !important;
     transform: translateX(-50%) translateY(12px) !important;
-    width: 900px !important;
-    max-width: 95vw !important;
+    width: 960px !important;
+    max-width: calc(100vw - 32px) !important;
     background: #ffffff !important;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.18) !important;
-    border-radius: 12px !important;
+    box-shadow: 0 20px 50px rgba(44, 34, 30, 0.16) !important;
+    border-radius: 16px !important;
     padding: 22px !important;
     opacity: 0;
     visibility: hidden;
     transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
     z-index: 99999 !important;
-    border: 1px solid #eee !important;
+    border: 1px solid #ede3da !important;
     list-style: none !important;
     margin: 0 !important;
 }
@@ -927,4 +931,162 @@ textarea {
     border-radius: 2px;
     margin: 0 auto;
 }
+
+/* ==================================================
+   18. Luxury Floating Toast Notification System
+   ================================================== */
+.sk-toast-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 9999999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.sk-toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 16px !important;
+    padding: 14px 18px !important;
+    box-shadow: 0 16px 40px rgba(44, 34, 30, 0.16), 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #ede3da !important;
+    min-width: 320px;
+    max-width: 420px;
+    position: relative;
+    overflow: hidden;
+    animation: skToastSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.sk-toast-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.sk-toast-icon.success {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(46, 204, 113, 0.35);
+}
+
+.sk-toast-icon.error {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(231, 76, 60, 0.35);
+}
+
+.sk-toast-icon.info {
+    background: linear-gradient(135deg, #c26747, #a44f32);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(194, 103, 71, 0.35);
+}
+
+.sk-toast-content {
+    flex-grow: 1;
+}
+
+.sk-toast-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2c221e;
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.sk-toast-message {
+    font-size: 13px;
+    color: #665c56;
+    line-height: 1.4;
+}
+
+.sk-toast-close {
+    background: none;
+    border: none;
+    color: #a89e97;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.sk-toast-close:hover {
+    color: #2c221e;
+    background: #f5ebe1;
+}
+
+.sk-toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    animation: skToastProgress 4.8s linear forwards;
+}
+
+.sk-toast-success .sk-toast-progress {
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+}
+
+.sk-toast-error .sk-toast-progress {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+}
+
+.sk-toast-info .sk-toast-progress {
+    background: linear-gradient(90deg, #c26747, #a44f32);
+}
+
+@@keyframes skToastSlideIn {
+    0% {
+        transform: translateY(-24px) scale(0.92);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@@keyframes skToastSlideOut {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-20px) scale(0.9);
+        opacity: 0;
+    }
+}
+
+@@keyframes skToastProgress {
+    0% { width: 100%; }
+    100% { width: 0%; }
+}
+
+@@media (max-width: 575px) {
+    .sk-toast-container {
+        top: 15px;
+        left: 15px;
+        right: 15px;
+    }
+    .sk-toast {
+        min-width: unset;
+        max-width: 100%;
+    }
+}
+
 

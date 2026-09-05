@@ -163,25 +163,57 @@
 
         <div id="sticky-header"></div>
 
-        <!-- Global Toast Alerts -->
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="container position-relative" style="z-index: 1050; margin-top: 90px; margin-bottom: -70px;">
-                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                    <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <!-- Luxury Floating Toast Notification System -->
+        <div class="sk-toast-container" id="globalToastContainer" aria-live="polite">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="sk-toast sk-toast-success shadow-lg" id="toastAlert" role="alert">
+                    <div class="sk-toast-icon success">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="sk-toast-content">
+                        <div class="sk-toast-title">Success</div>
+                        <div class="sk-toast-message">@TempData["SuccessMessage"]</div>
+                    </div>
+                    <button type="button" class="sk-toast-close" onclick="dismissToast('toastAlert')" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="sk-toast-progress"></div>
                 </div>
-            </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="container position-relative" style="z-index: 1050; margin-top: 90px; margin-bottom: -70px;">
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                    <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="sk-toast sk-toast-error shadow-lg" id="toastAlert" role="alert">
+                    <div class="sk-toast-icon error">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <div class="sk-toast-content">
+                        <div class="sk-toast-title">Attention</div>
+                        <div class="sk-toast-message">@TempData["ErrorMessage"]</div>
+                    </div>
+                    <button type="button" class="sk-toast-close" onclick="dismissToast('toastAlert')" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="sk-toast-progress"></div>
                 </div>
-            </div>
-        }
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="sk-toast sk-toast-info shadow-lg" id="toastAlert" role="alert">
+                    <div class="sk-toast-icon info">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="sk-toast-content">
+                        <div class="sk-toast-title">Information</div>
+                        <div class="sk-toast-message">@TempData["InfoMessage"]</div>
+                    </div>
+                    <button type="button" class="sk-toast-close" onclick="dismissToast('toastAlert')" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="sk-toast-progress"></div>
+                </div>
+            }
+        </div>
 
         <!-- Page Content -->
         <main class="site-main-content">
@@ -231,6 +263,27 @@
                 $('#mobileMenuToggle').removeClass('click-menu');
                 $('body').removeClass('sidemenu-active');
             });
+        });
+
+        // Global Toast Notification Helper
+        function dismissToast(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                el.style.animation = 'skToastSlideOut 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                setTimeout(function () {
+                    el.remove();
+                }, 350);
+            }
+        }
+
+        // Auto-dismiss after 4.8 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = document.getElementById('toastAlert');
+            if (toast) {
+                setTimeout(function () {
+                    dismissToast('toastAlert');
+                }, 4800);
+            }
         });
     </script>
 

@@ -47,13 +47,20 @@ namespace Recipe_Project.Controllers
                 return View(model);
             }
 
+            var isChef = model.RegisterAsChef;
+            var chefTitle = isChef 
+                ? (string.IsNullOrWhiteSpace(model.ChefTitle) ? "Verified Master Chef" : model.ChefTitle.Trim()) 
+                : null;
+
             var user = new ApplicationUser
             {
-                FullName = model.FullName,
-                Email = model.Email.ToLower(),
+                FullName = model.FullName.Trim(),
+                Email = model.Email.ToLower().Trim(),
                 PasswordHash = PasswordHelper.HashPassword(model.Password),
-                Role = "User",
-                AvatarUrl = "/images/author/user.png",
+                Role = isChef ? "Chef" : "User",
+                IsVerifiedChef = isChef,
+                ChefTitle = chefTitle,
+                AvatarUrl = isChef ? "/images/author/author1.jpg" : "/images/author/user.png",
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -63,7 +70,9 @@ namespace Recipe_Project.Controllers
             // Sign in newly registered user
             await SignInUserAsync(user, false);
 
-            TempData["SuccessMessage"] = "Welcome! Your account has been created successfully.";
+            TempData["SuccessMessage"] = isChef
+                ? $"Welcome Chef {user.FullName}! Your verified chef profile is ready."
+                : $"Welcome {user.FullName}! Your account has been created successfully.";
             return RedirectToAction("Index", "Home");
         }
 

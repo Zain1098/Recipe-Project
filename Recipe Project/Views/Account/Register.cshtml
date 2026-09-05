@@ -55,6 +55,25 @@
                         <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                     </div>
 
+                    <!-- Professional Chef Registration Option -->
+                    <div class="p-3 mb-4 rounded-3" style="background: #faf7f2; border: 1.5px dashed #c26747;">
+                        <div class="form-check form-switch mb-0 d-flex align-items-center">
+                            <input asp-for="RegisterAsChef" class="form-check-input me-2" type="checkbox" id="chefToggleCheck" onchange="toggleChefFields(this)" style="cursor: pointer; width: 38px; height: 20px; accent-color: #c26747;" />
+                            <label class="form-check-label fw-bold small mb-0" for="chefToggleCheck" style="cursor: pointer; color: #2c221e;">
+                                👨‍🍳 Register as a Professional Chef
+                            </label>
+                        </div>
+                        <small class="text-muted d-block mt-1" style="font-size: 11px;">
+                            Check this to receive the official <strong>Verified Chef Blue Checkmark</strong> on your recipes.
+                        </small>
+
+                        <div id="chefTitleContainer" class="mt-3 d-none">
+                            <label asp-for="ChefTitle" class="form-label fw-bold small">Chef Specialty / Title</label>
+                            <input asp-for="ChefTitle" class="form-control form-control-sm" placeholder="e.g. Executive Chef, Pastry Master, Italian Specialist" />
+                            <span class="text-muted" style="font-size: 11px;">This title will be displayed next to your verified badge.</span>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-sk-primary w-100 py-3 fw-bold">CREATE ACCOUNT</button>
 
                     <div class="text-center mt-4 small">
@@ -65,3 +84,16 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function toggleChefFields(checkbox) {
+            const container = document.getElementById('chefTitleContainer');
+            if (checkbox.checked) {
+                container.classList.remove('d-none');
+            } else {
+                container.classList.add('d-none');
+            }
+        }
+    </script>
+}
