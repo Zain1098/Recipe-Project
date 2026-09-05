@@ -19,6 +19,11 @@ namespace Recipe_Project.Models
 
         public string? AvatarUrl { get; set; } = "/images/author/user.png";
 
+        public bool IsVerifiedChef { get; set; } = false;
+
+        [MaxLength(100)]
+        public string? ChefTitle { get; set; } // e.g. "Executive Chef", "Master Culinary Specialist"
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();

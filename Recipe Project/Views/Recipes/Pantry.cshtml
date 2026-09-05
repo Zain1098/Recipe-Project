@@ -1,0 +1,391 @@
+@model Recipe_Project.ViewModels.PantryViewModel
+@{
+    ViewData["Title"] = "Smart Pantry - What's in My Fridge? | Deliciousa";
+    var hasSearched = Model.SelectedIngredients.Any();
+}
+
+<!-- Page Header Banner -->
+<div class="page-title-area bg-image bg-parallax2" style="background-image: url('/images/header/header1.jpg'); background-size: cover; background-position: center;">
+    <div class="container text-center">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-2 rounded-pill" style="background: rgba(194, 103, 71, 0.35); border: 1px solid rgba(255, 255, 255, 0.3);">
+            <span style="color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px;">🧊 SMART KITCHEN ASSISTANT</span>
+        </div>
+        <h2 class="page-title text-white fw-bold">What's In My Fridge?</h2>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 600px; font-size: 15px;">
+            Pick what ingredients you have in your kitchen right now, and we'll find delicious gourmet recipes you can cook instantly!
+        </p>
+    </div>
+</div>
+
+<div class="container py-4 py-md-5">
+    <!-- Pantry Selector Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 mb-4" style="background: #ffffff; border: 1px solid #ede3da !important;">
+        <form method="get" asp-controller="Recipes" asp-action="Pantry" id="pantryForm">
+            <h4 class="fw-bold mb-2" style="font-family: 'Playfair Display', serif; color: #2c221e;">
+                <i class="fas fa-carrot me-2" style="color: #c26747;"></i> Select or Type Your Available Ingredients
+            </h4>
+            <p class="text-muted small mb-3">Click on any common ingredients below or type your own to build your current pantry inventory.</p>
+
+            <!-- Popular Quick-Select Ingredients -->
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-uppercase text-secondary" style="letter-spacing: 0.5px;">Quick Tap Ingredients:</label>
+                <div class="d-flex flex-wrap gap-2" id="popularPills">
+                    @foreach (var pop in Model.PopularIngredients)
+                    {
+                        var isSelected = Model.SelectedIngredients.Contains(pop.ToLower());
+                        <button type="button" 
+                                class="btn btn-sm pantry-quick-pill @(isSelected ? "active" : "")" 
+                                data-name="@pop.ToLower()"
+                                onclick="toggleIngredient('@pop.ToLower()')">
+                            @(isSelected ? "✓ " : "+ ")@pop
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Custom Input Box -->
+            <div class="row g-2 align-items-center mb-3">
+                <div class="col-md-9 col-12">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0" style="border-color: #ede3da;">
+                            <i class="fas fa-plus text-muted"></i>
+                        </span>
+                        <input type="text" id="customIngInput" class="form-control border-start-0" style="border-color: #ede3da;" placeholder="Type custom ingredient (e.g. olive oil, mushrooms, basil) and press Enter..." />
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <button type="button" class="btn btn-outline-dark w-100 py-2" onclick="addCustomIngredient()">
+                        Add to Fridge
+                    </button>
+                </div>
+            </div>
+
+            <!-- Selected Ingredients Tags Display -->
+            <div class="p-3 rounded-3 mb-3" style="background-color: #faf7f2; border: 1px dashed #c26747;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small fw-bold" style="color: #2c221e;">
+                        <i class="fas fa-shopping-basket me-1" style="color: #c26747;"></i> Selected Ingredients (<span id="ingCount">@Model.SelectedIngredients.Count</span>):
+                    </span>
+                    <button type="button" class="btn btn-link text-danger p-0 text-decoration-none small" onclick="clearAllIngredients()">
+                        Clear All
+                    </button>
+                </div>
+                <div class="d-flex flex-wrap gap-2" id="selectedTagsContainer">
+                    @if (!Model.SelectedIngredients.Any())
+                    {
+                        <span class="text-muted small fst-italic" id="emptyPantryMsg">No ingredients selected yet. Tap above or type your ingredients!</span>
+                    }
+                    @foreach (var ing in Model.SelectedIngredients)
+                    {
+                        <span class="badge selected-ing-tag" data-val="@ing">
+                            @ing <i class="fas fa-times ms-1" onclick="removeIngredient('@ing')" style="cursor: pointer;"></i>
+                        </span>
+                    }
+                </div>
+            </div>
+
+            <input type="hidden" name="ingredients" id="ingredientsHidden" value="@string.Join(",", Model.SelectedIngredients)" />
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-sk-primary py-2 px-5 fs-6 shadow-sm">
+                    <i class="fas fa-search me-2"></i> Find Matching Recipes
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Match Results Section -->
+    @if (hasSearched)
+    {
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif; color: #2c221e;">
+                    Recipes You Can Make (@Model.Matches.Count)
+                </h3>
+                <span class="badge bg-light text-dark border px-3 py-2">
+                    Ranked by best ingredient match
+                </span>
+            </div>
+
+            @if (!Model.Matches.Any())
+            {
+                <div class="text-center py-5 bg-white rounded-4 p-4 shadow-sm border" style="border-color: #ede3da !important;">
+                    <i class="fas fa-utensils text-muted" style="font-size: 48px; opacity: 0.5;"></i>
+                    <h4 class="mt-3 fw-bold" style="color: #2c221e;">No Matching Recipes Found</h4>
+                    <p class="text-muted">None of our current recipes matched your combination. Try adding staple ingredients like <strong>Eggs, Chicken, Flour, Rice, or Tomatoes</strong>.</p>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var match in Model.Matches)
+                    {
+                        var isPerfectMatch = match.MatchPercentage >= 100;
+                        var isGreatMatch = match.MatchPercentage >= 60;
+                        var badgeColor = isPerfectMatch ? "#28a745" : (isGreatMatch ? "#c26747" : "#ffc107");
+                        var badgeText = isPerfectMatch ? "100% Match - Ready to Cook!" : $"{match.MatchPercentage}% Match ({match.MissingIngredients.Count} missing)";
+
+                        <div class="col-lg-6 col-12">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style="border: 1px solid #ede3da !important; transition: transform 0.2s;">
+                                <div class="row g-0 h-100">
+                                    <div class="col-sm-5 col-12 position-relative" style="min-height: 200px;">
+                                        <img src="@match.Recipe.ImageUrl" alt="@match.Recipe.Title" class="w-100 h-100" style="object-fit: cover;" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
+                                        <span class="position-absolute top-0 start-0 m-2 px-2 py-1 rounded-pill text-white fw-bold shadow-sm" style="background-color: @badgeColor; font-size: 11px;">
+                                            @badgeText
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-7 col-12 p-3 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="badge-cat small" style="color: #c26747; font-weight: 600; text-transform: uppercase; font-size: 11px;">@match.Recipe.Category</span>
+                                                <span class="small text-muted"><i class="far fa-clock"></i> @(match.Recipe.PrepTimeMinutes + match.Recipe.CookTimeMinutes)m</span>
+                                            </div>
+                                            <h5 class="fw-bold mb-1">
+                                                <a asp-controller="Recipes" asp-action="Details" asp-route-id="@match.Recipe.Id" class="text-dark text-decoration-none">
+                                                    @match.Recipe.Title
+                                                </a>
+                                            </h5>
+                                            
+                                            <!-- Author with Verified Chef Badge -->
+                                            <div class="d-flex align-items-center gap-1 mb-2">
+                                                <small class="text-muted">By @(match.Recipe.User?.FullName ?? "Chef")</small>
+                                                @if (match.Recipe.User?.IsVerifiedChef == true)
+                                                {
+                                                    <span title="Verified Professional Chef" style="color: #1da1f2; font-size: 12px;">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </span>
+                                                }
+                                            </div>
+
+                                            <!-- Ingredients Breakdown -->
+                                            <div class="mb-2">
+                                                <small class="d-block fw-bold text-success mb-1" style="font-size: 12px;">
+                                                    <i class="fas fa-check"></i> You have (@match.HaveIngredients.Count):
+                                                </small>
+                                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                                    @foreach (var h in match.HaveIngredients.Take(4))
+                                                    {
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 11px; font-weight: 500;">
+                                                            @h
+                                                        </span>
+                                                    }
+                                                    @if (match.HaveIngredients.Count > 4)
+                                                    {
+                                                        <span class="badge bg-light text-muted border" style="font-size: 10px;">+@(match.HaveIngredients.Count - 4) more</span>
+                                                    }
+                                                </div>
+
+                                                @if (match.MissingIngredients.Any())
+                                                {
+                                                    <small class="d-block fw-bold text-warning mb-1" style="font-size: 12px;">
+                                                        <i class="fas fa-exclamation-circle"></i> Missing (@match.MissingIngredients.Count):
+                                                    </small>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        @foreach (var m in match.MissingIngredients.Take(3))
+                                                        {
+                                                            <span class="badge bg-warning-subtle text-dark border border-warning-subtle" style="font-size: 11px; font-weight: 500;">
+                                                                @m
+                                                            </span>
+                                                        }
+                                                        @if (match.MissingIngredients.Count > 3)
+                                                        {
+                                                            <span class="badge bg-light text-muted border" style="font-size: 10px;">+@(match.MissingIngredients.Count - 3) more</span>
+                                                        }
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-2 border-top d-flex gap-2">
+                                            <a asp-controller="Recipes" asp-action="Details" asp-route-id="@match.Recipe.Id" class="btn btn-sm btn-sk-primary flex-grow-1">
+                                                View & Cook
+                                            </a>
+                                            @if (match.MissingIngredients.Any())
+                                            {
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addMissingToCart(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(match.MissingIngredients)))" title="Add missing items to grocery list">
+                                                    <i class="fas fa-cart-plus"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Empty State / How it works Guide -->
+        <div class="row g-4 text-center mt-2">
+            <div class="col-md-4 col-12">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100 border" style="border-color: #ede3da !important;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: #faf0e6; color: #c26747; font-size: 24px;">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h5 class="fw-bold">1. Check Your Kitchen</h5>
+                    <p class="text-secondary small mb-0">Select what vegetables, pantry items, dairy, or meats you already have at home.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-12">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100 border" style="border-color: #ede3da !important;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: #e8f5e9; color: #2e7d32; font-size: 24px;">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h5 class="fw-bold">2. Instant Match</h5>
+                    <p class="text-secondary small mb-0">Our smart algorithm instantly ranks all recipes by match percentage and highlights missing items.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-12">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100 border" style="border-color: #ede3da !important;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: #e3f2fd; color: #1976d2; font-size: 24px;">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h5 class="fw-bold">3. Cook Without Waste</h5>
+                    <p class="text-secondary small mb-0">Cook high quality meals without unnecessary grocery trips, saving time and preventing food waste!</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .pantry-quick-pill {
+            background-color: #f7f3ee;
+            border: 1px solid #e2d7cd;
+            color: #555;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .pantry-quick-pill:hover {
+            background-color: #eee3d8;
+            color: #2c221e;
+        }
+        .pantry-quick-pill.active {
+            background-color: #c26747 !important;
+            border-color: #c26747 !important;
+            color: #ffffff !important;
+        }
+        .selected-ing-tag {
+            background-color: #2c221e;
+            color: #ffffff;
+            font-size: 13px;
+            padding: 7px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 500;
+        }
+        .selected-ing-tag i {
+            margin-left: 6px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .selected-ing-tag i:hover {
+            opacity: 1;
+            color: #ff8b8b;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        let currentIngredients = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SelectedIngredients));
+
+        function updateHiddenAndCount() {
+            document.getElementById('ingredientsHidden').value = currentIngredients.join(',');
+            document.getElementById('ingCount').innerText = currentIngredients.length;
+            renderTags();
+            updatePillActiveStates();
+        }
+
+        function toggleIngredient(name) {
+            name = name.trim().toLowerCase();
+            const index = currentIngredients.indexOf(name);
+            if (index > -1) {
+                currentIngredients.splice(index, 1);
+            } else {
+                currentIngredients.push(name);
+            }
+            updateHiddenAndCount();
+        }
+
+        function removeIngredient(name) {
+            name = name.trim().toLowerCase();
+            const index = currentIngredients.indexOf(name);
+            if (index > -1) {
+                currentIngredients.splice(index, 1);
+            }
+            updateHiddenAndCount();
+        }
+
+        function addCustomIngredient() {
+            const input = document.getElementById('customIngInput');
+            const val = input.value.trim().toLowerCase();
+            if (val && !currentIngredients.includes(val)) {
+                currentIngredients.push(val);
+                input.value = '';
+                updateHiddenAndCount();
+            }
+        }
+
+        document.getElementById('customIngInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addCustomIngredient();
+            }
+        });
+
+        function clearAllIngredients() {
+            currentIngredients = [];
+            updateHiddenAndCount();
+        }
+
+        function renderTags() {
+            const container = document.getElementById('selectedTagsContainer');
+            if (currentIngredients.length === 0) {
+                container.innerHTML = '<span class="text-muted small fst-italic" id="emptyPantryMsg">No ingredients selected yet. Tap above or type your ingredients!</span>';
+                return;
+            }
+
+            let html = '';
+            currentIngredients.forEach(item => {
+                html += `<span class="badge selected-ing-tag">${item} <i class="fas fa-times ms-1" onclick="removeIngredient('${item}')" style="cursor: pointer;"></i></span> `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updatePillActiveStates() {
+            const pills = document.querySelectorAll('.pantry-quick-pill');
+            pills.forEach(pill => {
+                const name = pill.getAttribute('data-name');
+                if (currentIngredients.includes(name)) {
+                    pill.classList.add('active');
+                    pill.innerText = '✓ ' + name.charAt(0).toUpperCase() + name.slice(1);
+                } else {
+                    pill.classList.remove('active');
+                    pill.innerText = '+ ' + name.charAt(0).toUpperCase() + name.slice(1);
+                }
+            });
+        }
+
+        function addMissingToCart(items) {
+            let cart = JSON.parse(localStorage.getItem('deliciousa_shopping_list') || '[]');
+            let addedCount = 0;
+            items.forEach(item => {
+                if (!cart.some(c => c.name.toLowerCase() === item.toLowerCase())) {
+                    cart.push({ id: Date.now() + Math.random(), name: item, checked: false });
+                    addedCount++;
+                }
+            });
+            localStorage.setItem('deliciousa_shopping_list', JSON.stringify(cart));
+            alert(`Added ${addedCount} missing ingredient(s) to your Grocery Shopping List!`);
+        }
+    </script>
+}

@@ -72,6 +72,27 @@
         </form>
     </div>
 
+    <!-- Smart Kitchen Callout Banner -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 p-3 rounded-4 shadow-sm" style="background: linear-gradient(135deg, #faf7f2, #f5ebe1); border: 1px solid #ede3da;">
+        <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle p-2 bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; font-size: 20px;">
+                🧊
+            </div>
+            <div>
+                <h6 class="mb-0 fw-bold" style="color: #2c221e;">Don't know what to cook today?</h6>
+                <small class="text-muted">Pick what ingredients you already have in your kitchen, and we'll find recipes you can make!</small>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-controller="Recipes" asp-action="Pantry" class="btn btn-sm btn-sk-primary">
+                <i class="fas fa-magic me-1"></i> What's In My Fridge?
+            </a>
+            <a asp-controller="Recipes" asp-action="ShoppingList" class="btn btn-sm btn-outline-dark">
+                <i class="fas fa-clipboard-list me-1"></i> Grocery List
+            </a>
+        </div>
+    </div>
+
     <!-- Recipes Grid -->
     @if (!Model.Any())
     {
@@ -108,9 +129,17 @@
                         <div class="sk-card-content">
                             <div class="sk-card-meta-top">
                                 <span class="sk-card-cat">@recipe.Category</span>
-                                <span class="sk-card-rating">
-                                    <i class="fas fa-star"></i> <strong>@recipe.AverageRating</strong> <span class="text-muted small">(@recipe.TotalReviews)</span>
-                                </span>
+                                <div class="d-flex align-items-center gap-1">
+                                    @if (recipe.User?.IsVerifiedChef == true)
+                                    {
+                                        <span title="Verified Professional Chef" style="color: #1da1f2; font-size: 13px;">
+                                            <i class="fas fa-check-circle"></i>
+                                        </span>
+                                    }
+                                    <span class="sk-card-rating">
+                                        <i class="fas fa-star"></i> <strong>@recipe.AverageRating</strong> <span class="text-muted small">(@recipe.TotalReviews)</span>
+                                    </span>
+                                </div>
                             </div>
                             <h3 class="sk-card-title">
                                 <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id">@recipe.Title</a>

@@ -335,7 +335,7 @@ namespace Recipe_Project.Controllers
         // POST: /Recipes/AddReview
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddReview(int recipeId, int rating, string authorName, string comment)
+        public async Task<IActionResult> AddReview(int recipeId, string? authorName, int rating, string comment, IFormFile? dishPhoto)
         {
             var recipe = await _context.Recipes.FindAsync(recipeId);
             if (recipe == null)
@@ -369,6 +369,32 @@ namespace Recipe_Project.Controllers
                 return RedirectToAction(nameof(Details), new { id = recipeId });
             }
 
+            string? dishPhotoUrl = null;
+            if (dishPhoto != null && dishPhoto.Length > 0)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                var ext = Path.GetExtension(dishPhoto.FileName).ToLowerInvariant();
+
+                if (allowedExtensions.Contains(ext) && dishPhoto.Length <= 5 * 1024 * 1024)
+                {
+                    var uploadsDir = Path.Combine(_environment.WebRootPath, "uploads", "reviews");
+                    if (!Directory.Exists(uploadsDir))
+                    {
+                        Directory.CreateDirectory(uploadsDir);
+                    }
+
+                    var uniqueFileName = $"{Guid.NewGuid()}{ext}";
+                    var filePath = Path.Combine(uploadsDir, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await dishPhoto.CopyToAsync(fileStream);
+                    }
+
+                    dishPhotoUrl = $"/uploads/reviews/{uniqueFileName}";
+                }
+            }
+
             var review = new Review
             {
                 RecipeId = recipeId,
@@ -376,13 +402,16 @@ namespace Recipe_Project.Controllers
                 AuthorName = authorName,
                 Rating = rating,
                 Comment = comment.Trim(),
+                DishPhotoUrl = dishPhotoUrl,
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Thank you! Your review has been published.";
+            TempData["SuccessMessage"] = dishPhotoUrl != null 
+                ? "Awesome! Your photo & review have been published to the community showcase!" 
+                : "Thank you! Your review has been published.";
             return RedirectToAction(nameof(Details), new { id = recipeId });
         }
 
@@ -445,6 +474,82 @@ namespace Recipe_Project.Controllers
 
             ViewBag.PageHeading = "My Created Recipes";
             return View("Index", myRecipes);
+        }
+
+        // GET: /Recipes/Pantry
+        [HttpGet]
+        public async Task<IActionResult> Pantry(string? ingredients)
+        {
+            var model = new PantryViewModel();
+            var allRecipes = await _context.Recipes
+                .Include(r => r.User)
+                .Include(r => r.Reviews)
+                .ToListAsync();
+
+            if (!string.IsNullOrWhiteSpace(ingredients))
+            {
+                var inputList = ingredients.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(i => i.Trim().ToLower())
+                    .Where(i => !string.IsNullOrWhiteSpace(i))
+                    .Distinct()
+                    .ToList();
+
+                model.SelectedIngredients = inputList;
+
+                var matches = new List<PantryRecipeMatch>();
+
+                foreach (var r in allRecipes)
+                {
+                    var recipeIngs = r.Ingredients;
+                    if (!recipeIngs.Any()) continue;
+
+                    var have = new List<string>();
+                    var missing = new List<string>();
+
+                    foreach (var ring in recipeIngs)
+                    {
+                        var lowerRing = ring.ToLower();
+                        // Check if any of the user's input ingredients is in this ingredient
+                        var matched = inputList.Any(userInput => 
+                            lowerRing.Contains(userInput) || userInput.Contains(lowerRing));
+
+                        if (matched)
+                        {
+                            have.Add(ring);
+                        }
+                        else
+                        {
+                            missing.Add(ring);
+                        }
+                    }
+
+                    if (have.Any())
+                    {
+                        matches.Add(new PantryRecipeMatch
+                        {
+                            Recipe = r,
+                            MatchedCount = have.Count,
+                            TotalIngredients = recipeIngs.Count,
+                            HaveIngredients = have,
+                            MissingIngredients = missing
+                        });
+                    }
+                }
+
+                model.Matches = matches
+                    .OrderByDescending(m => m.MatchPercentage)
+                    .ThenByDescending(m => m.MatchedCount)
+                    .ToList();
+            }
+
+            return View(model);
+        }
+
+        // GET: /Recipes/ShoppingList
+        [HttpGet]
+        public IActionResult ShoppingList()
+        {
+            return View();
         }
 
         private int GetCurrentUserId()

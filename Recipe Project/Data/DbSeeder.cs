@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Recipe_Project.Models;
 using Recipe_Project.Services;
 
@@ -10,8 +11,33 @@ namespace Recipe_Project.Data
         {
             await context.Database.EnsureCreatedAsync();
 
+            // Lightweight SQLite column migrations for existing databases
+            try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN IsVerifiedChef INTEGER NOT NULL DEFAULT 0;"); } catch { }
+            try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN ChefTitle TEXT;"); } catch { }
+            try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Reviews ADD COLUMN DishPhotoUrl TEXT;"); } catch { }
+
             if (context.Users.Any())
             {
+                // Ensure existing admin/chef user has verified credentials updated
+                var existingChef = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(context.Users, u => u.Role == "Admin" || u.Email == "zain@recipeproject.com");
+                if (existingChef != null)
+                {
+                    existingChef.IsVerifiedChef = true;
+                    if (string.IsNullOrEmpty(existingChef.ChefTitle))
+                    {
+                        existingChef.ChefTitle = "Executive Chef & Culinary Director";
+                    }
+                    await context.SaveChangesAsync();
+                }
+
+                // Ensure at least one review has a sample photo for community showcase demo
+                var sampleReview = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(context.Reviews, r => string.IsNullOrEmpty(r.DishPhotoUrl));
+                if (sampleReview != null)
+                {
+                    sampleReview.DishPhotoUrl = "/images/foodmenu/menu/1.jpg";
+                    await context.SaveChangesAsync();
+                }
+
                 return; // Already seeded
             }
 
@@ -22,6 +48,8 @@ namespace Recipe_Project.Data
                 Email = "zain@recipeproject.com",
                 PasswordHash = PasswordHelper.HashPassword("Password123"),
                 Role = "Admin",
+                IsVerifiedChef = true,
+                ChefTitle = "Executive Chef & Culinary Director",
                 AvatarUrl = "/images/author/author1.jpg",
                 CreatedAt = DateTime.UtcNow
             };

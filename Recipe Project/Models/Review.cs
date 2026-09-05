@@ -21,6 +21,10 @@ namespace Recipe_Project.Models
         [Required, MaxLength(1000)]
         public string Comment { get; set; } = string.Empty;
 
+        public string? DishPhotoUrl { get; set; }
+
+        public bool HasCookedProof => !string.IsNullOrEmpty(DishPhotoUrl);
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

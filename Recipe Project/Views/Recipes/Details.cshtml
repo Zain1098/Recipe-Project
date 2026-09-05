@@ -14,6 +14,8 @@
     var reviewCnt = Math.Max(1, Model.TotalReviews);
     var ingredientsJson = string.Join(",\n    ", Model.Ingredients.Select(i => "\"" + i.Replace("\"", "\\\"") + "\""));
     var instructionsJson = string.Join(",\n    ", Model.Instructions.Select(ins => "{\"@type\": \"HowToStep\", \"text\": \"" + ins.Replace("\"", "\\\"") + "\"}"));
+
+    var cookedPhotos = Model.Reviews.Where(r => !string.IsNullOrEmpty(r.DishPhotoUrl)).ToList();
 }
 
 <!-- Page Header Banner -->
@@ -66,12 +68,30 @@
 </script>
 
 <div class="container py-4 py-md-5">
+    <!-- Success/Error Feedback Alerts -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="row g-4">
         <div class="col-lg-8 col-12">
             <!-- Hero Recipe Image -->
             <div class="mb-4 position-relative rounded-4 overflow-hidden shadow-sm" style="border: 1px solid #ede3da;">
                 <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid w-100" style="max-height: 460px; object-fit: cover;" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
-                <div class="position-absolute top-0 end-0 p-3">
+                
+                <!-- Action Floating Icons -->
+                <div class="position-absolute top-0 end-0 p-3 d-flex gap-2">
                     <button id="saveBtn" class="btn btn-light shadow-sm" onclick="toggleSave(@Model.Id)" style="border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;" title="Bookmark this recipe">
                         <i id="heartIcon" class="@(isSaved ? "fas" : "far") fa-heart" style="color: #c26747; font-size: 18px;"></i>
                     </button>
@@ -95,11 +115,28 @@
             }
 
             <!-- Story / Description -->
-            <h3 style="font-family: 'Playfair Display', serif; font-size: clamp(22px, 3vw, 28px); margin-bottom: 12px;">About this Recipe</h3>
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: clamp(22px, 3vw, 28px); margin-bottom: 0;">
+                    About this Recipe
+                </h3>
+                <!-- Chef Verification Tag in Title Line -->
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small">Created by: <strong>@(Model.User?.FullName ?? "Chef Zain")</strong></span>
+                    @if (Model.User?.IsVerifiedChef == true)
+                    {
+                        <span title="Verified Professional Chef" style="color: #1da1f2; font-size: 14px;">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 10px; font-weight: 600;">
+                            VERIFIED CHEF
+                        </span>
+                    }
+                </div>
+            </div>
             <p style="font-size: 15px; line-height: 1.8; color: #555; margin-bottom: 25px;">@Model.Description</p>
 
             <!-- Responsive Meta Box -->
-            <div class="recipe-meta-box">
+            <div class="recipe-meta-box mb-4">
                 <div class="meta-item">
                     <div class="label"><i class="far fa-clock text-warning"></i> Prep Time</div>
                     <div class="val">@Model.PrepTimeMinutes m</div>
@@ -110,7 +147,7 @@
                 </div>
                 <div class="meta-item">
                     <div class="label"><i class="fas fa-user-friends text-info"></i> Servings</div>
-                    <div class="val">@Model.Servings</div>
+                    <div class="val"><span id="metaServingsText">@Model.Servings</span></div>
                 </div>
                 <div class="meta-item">
                     <div class="label"><i class="fas fa-signal text-success"></i> Difficulty</div>
@@ -122,28 +159,58 @@
                 </div>
             </div>
 
-            <!-- Ingredients Card -->
-            <div class="card border-0 shadow-sm mb-4 rounded-3 overflow-hidden">
-                <div class="card-header bg-white py-3 border-bottom">
-                    <h4 class="mb-0 fw-bold"><i class="fas fa-carrot text-warning me-2"></i> Ingredients</h4>
-                    <small class="text-muted">Click any item to check it off as you prepare!</small>
+            <!-- Ingredients Card with Servings Scaler & Grocery List Add -->
+            <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden" style="border: 1px solid #ede3da !important;">
+                <div class="card-header bg-white py-3 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                        <h4 class="mb-0 fw-bold"><i class="fas fa-carrot text-warning me-2"></i> Ingredients</h4>
+                        <small class="text-muted">Adjust servings to dynamically scale quantities</small>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <!-- Serving Portion Scaler Control -->
+                        <div class="serving-scaler-control d-flex align-items-center px-2 py-1 rounded-pill" style="background: #faf7f2; border: 1px solid #ede3da;">
+                            <span class="small text-muted me-2" style="font-size: 12px;">Servings:</span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary serving-btn" onclick="changeServings(-1)" title="Decrease portions">-</button>
+                            <span id="scalerServingsCount" class="fw-bold px-2" style="min-width: 24px; text-align: center; color: #c26747;">@Model.Servings</span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary serving-btn" onclick="changeServings(1)" title="Increase portions">+</button>
+                        </div>
+
+                        <!-- 1-Click Grocery List Button -->
+                        <button type="button" class="btn btn-sm btn-outline-dark" onclick="addAllToShoppingList()" title="Save all ingredients to your grocery list">
+                            <i class="fas fa-cart-plus me-1 text-warning"></i> + Grocery List
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body p-0" id="ingredientsListBody">
                     @foreach (var ing in Model.Ingredients)
                     {
                         var ingId = "ing_" + Math.Abs(ing.GetHashCode());
-                        <div class="ingredient-item">
-                            <input type="checkbox" class="form-check-input me-3" style="width: 18px; height: 18px;" id="@ingId" />
-                            <label class="form-check-label mb-0" for="@ingId" style="font-size: 14px; cursor: pointer;">@ing</label>
+                        <div class="ingredient-item d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                            <div class="d-flex align-items-center flex-grow-1">
+                                <input type="checkbox" class="form-check-input me-3" style="width: 18px; height: 18px; accent-color: #c26747;" id="@ingId" />
+                                <label class="form-check-label mb-0 ingredient-text" for="@ingId" data-original="@ing" style="font-size: 14px; cursor: pointer;">@ing</label>
+                            </div>
+                            <button type="button" class="btn btn-link text-muted p-0 ms-2" onclick="addSingleToShoppingList('@ing')" title="Add this item to grocery list">
+                                <i class="fas fa-plus-circle" style="font-size: 14px; color: #c26747;"></i>
+                            </button>
                         </div>
                     }
                 </div>
             </div>
 
-            <!-- Instructions Card -->
-            <div class="card border-0 shadow-sm mb-5 rounded-3 overflow-hidden">
-                <div class="card-header bg-white py-3 border-bottom">
-                    <h4 class="mb-0 fw-bold"><i class="fas fa-tasks text-success me-2"></i> Step-by-Step Instructions</h4>
+            <!-- Instructions Card with Interactive Cooking Mode Launch -->
+            <div class="card border-0 shadow-sm mb-5 rounded-4 overflow-hidden" style="border: 1px solid #ede3da !important;">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h4 class="mb-0 fw-bold"><i class="fas fa-tasks text-success me-2"></i> Cooking Instructions</h4>
+                        <small class="text-muted">Follow step-by-step or enter full-screen kitchen mode</small>
+                    </div>
+
+                    <!-- Hands-Free Cooking Mode Button -->
+                    <button type="button" class="btn btn-sm btn-sk-primary px-3 shadow-sm" onclick="startCookingMode()">
+                        <i class="fas fa-play-circle me-1"></i> Start Cooking Mode
+                    </button>
                 </div>
                 <div class="card-body p-3 p-md-4">
                     @{
@@ -151,11 +218,13 @@
                     }
                     @foreach (var step in Model.Instructions)
                     {
-                        <div class="d-flex mb-4 align-items-start">
+                        <div class="d-flex mb-4 align-items-start instruction-step-row" data-step-text="@step">
                             <div class="step-number">@stepNum</div>
-                            <div class="step-content">
-                                <h6 class="fw-bold mb-1">Step @stepNum</h6>
-                                <p class="mb-0">@step</p>
+                            <div class="step-content flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0">Step @stepNum</h6>
+                                </div>
+                                <p class="mb-0 text-secondary" style="font-size: 15px; line-height: 1.7;">@step</p>
                             </div>
                         </div>
                         stepNum++;
@@ -163,10 +232,47 @@
                 </div>
             </div>
 
+            <!-- "Cooked by the Community" Photo Showcase (Real Photo Upload Feature) -->
+            @if (cookedPhotos.Any())
+            {
+                <div class="card border-0 shadow-sm mb-5 rounded-4 p-3 p-md-4" style="background: #faf8f5; border: 1px solid #ede3da !important;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h4 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif; color: #2c221e;">
+                                <i class="fas fa-camera-retro me-2" style="color: #c26747;"></i> Cooked by the Community (@cookedPhotos.Count)
+                            </h4>
+                            <small class="text-muted">Real dish photos made by home chefs who followed this recipe</small>
+                        </div>
+                        <a href="#reviewFormBox" class="btn btn-sm btn-outline-dark">+ Share Yours</a>
+                    </div>
+                    <div class="row g-3">
+                        @foreach (var photoRev in cookedPhotos)
+                        {
+                            <div class="col-md-4 col-6">
+                                <div class="community-photo-card rounded-3 overflow-hidden position-relative shadow-sm" style="border: 1px solid #ede3da;">
+                                    <img src="@photoRev.DishPhotoUrl" alt="Dish cooked by @photoRev.AuthorName" class="w-100" style="height: 160px; object-fit: cover; transition: transform 0.3s;" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
+                                    <div class="position-absolute bottom-0 start-0 end-0 p-2 text-white" style="background: linear-gradient(transparent, rgba(0,0,0,0.85)); font-size: 12px;">
+                                        <div class="fw-bold text-truncate">@photoRev.AuthorName</div>
+                                        <div class="text-warning" style="font-size: 10px;">
+                                            @for (var i = 1; i <= photoRev.Rating; i++)
+                                            {
+                                                <i class="fas fa-star"></i>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
             <!-- Reviews Section -->
             <div class="reviews-section mt-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 style="font-family: 'Playfair Display', serif;">Reviews (@Model.Reviews.Count)</h3>
+                    <h3 style="font-family: 'Playfair Display', serif; color: #2c221e;">
+                        Community Reviews (@Model.Reviews.Count)
+                    </h3>
                     <div class="text-warning">
                         <i class="fas fa-star"></i> <strong>@Model.AverageRating / 5.0</strong>
                     </div>
@@ -174,18 +280,26 @@
 
                 @if (!Model.Reviews.Any())
                 {
-                    <p class="text-muted fst-italic">Be the first to review this recipe!</p>
+                    <p class="text-muted fst-italic">No reviews yet. Be the first cook to try and review this recipe!</p>
                 }
                 else
                 {
                     @foreach (var rev in Model.Reviews.OrderByDescending(r => r.CreatedAt))
                     {
-                        <div class="review-card">
+                        <div class="review-card p-3 mb-3 rounded-3 shadow-sm" style="background: #ffffff; border: 1px solid #ede3da;">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
-                                    <img src="/images/author/user.png" alt="User" style="width: 34px; height: 34px; border-radius: 50%; margin-right: 10px;" />
+                                    <img src="@(rev.User?.AvatarUrl ?? "/images/author/user.png")" alt="User" style="width: 38px; height: 38px; border-radius: 50%; margin-right: 10px; object-fit: cover;" onerror="this.src='/images/author/user.png'" />
                                     <div>
-                                        <strong>@rev.AuthorName</strong>
+                                        <div class="d-flex align-items-center gap-1">
+                                            <strong style="color: #2c221e;">@rev.AuthorName</strong>
+                                            @if (rev.User?.IsVerifiedChef == true)
+                                            {
+                                                <span title="Verified Professional Chef" style="color: #1da1f2; font-size: 12px;">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </span>
+                                            }
+                                        </div>
                                         <small class="text-muted d-block" style="font-size: 11px;">@rev.CreatedAt.ToString("MMM dd, yyyy")</small>
                                     </div>
                                 </div>
@@ -196,22 +310,40 @@
                                     }
                                 </div>
                             </div>
-                            <p class="mb-0 text-secondary" style="font-size: 14px; line-height: 1.6;">@rev.Comment</p>
+
+                            <p class="mb-2 text-secondary" style="font-size: 14px; line-height: 1.6;">@rev.Comment</p>
+
+                            <!-- User Cooked Dish Photo Thumbnail -->
+                            @if (!string.IsNullOrEmpty(rev.DishPhotoUrl))
+                            {
+                                <div class="mt-2">
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle mb-1" style="font-size: 11px;">
+                                        <i class="fas fa-check-double me-1"></i> Verified Cooked Proof
+                                    </span>
+                                    <div class="d-inline-block rounded-3 overflow-hidden shadow-sm border" style="border-color: #ede3da !important;">
+                                        <img src="@rev.DishPhotoUrl" alt="Dish photo" style="max-height: 140px; max-width: 220px; object-fit: cover; cursor: pointer;" onclick="openImageModal('@rev.DishPhotoUrl')" onerror="this.src='/images/foodmenu/menu/1.jpg'" />
+                                    </div>
+                                </div>
+                            }
                         </div>
                     }
                 }
 
-                <!-- Review Form -->
-                <div class="card p-3 p-md-4 border-0 shadow-sm mt-4 rounded-3" style="background: #faf8f5;">
-                    <h4 class="fw-bold mb-3" style="font-size: 18px;">Leave Feedback & Rating</h4>
-                    <form asp-controller="Recipes" asp-action="AddReview" method="post">
+                <!-- Review Form with Photo Upload -->
+                <div class="card p-3 p-md-4 border-0 shadow-sm mt-4 rounded-4" id="reviewFormBox" style="background: #faf8f5; border: 1px solid #ede3da !important;">
+                    <h4 class="fw-bold mb-1" style="font-size: 18px; color: #2c221e;">
+                        <i class="fas fa-pen-nib text-warning me-2"></i> Leave Feedback & Photo Proof
+                    </h4>
+                    <p class="text-muted small mb-3">Did you cook this recipe? Upload a photo to show off your culinary creation to the community!</p>
+
+                    <form asp-controller="Recipes" asp-action="AddReview" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="recipeId" value="@Model.Id" />
 
                         <div class="row g-2 mb-3">
                             <div class="col-md-6 col-12">
                                 <label class="form-label small fw-bold">Your Name</label>
-                                <input type="text" name="authorName" class="form-control" value="@User.Identity?.Name" placeholder="e.g. Alex" required />
+                                <input type="text" name="authorName" class="form-control" value="@User.Identity?.Name" placeholder="e.g. Chef Alex" required />
                             </div>
                             <div class="col-md-6 col-12">
                                 <label class="form-label small fw-bold">Rating</label>
@@ -225,12 +357,28 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">Your Comments</label>
-                            <textarea name="comment" rows="3" class="form-control" placeholder="Share your thoughts or any cooking tips..." required></textarea>
+                        <!-- Real Photo Upload Section -->
+                        <div class="mb-3 p-3 rounded-3" style="background: #ffffff; border: 1px dashed #c26747;">
+                            <label class="form-label small fw-bold d-flex align-items-center justify-content-between mb-1">
+                                <span><i class="fas fa-camera text-warning me-1"></i> Cooked Dish Photo ("I Made This!")</span>
+                                <span class="text-muted" style="font-size: 11px;">Optional &bull; JPG, PNG, WEBP &bull; Max 5MB</span>
+                            </label>
+                            <input type="file" name="dishPhoto" id="dishPhotoInput" class="form-control form-control-sm" accept="image/png, image/jpeg, image/webp" onchange="previewReviewPhoto(this)" />
+                            
+                            <div id="photoPreviewBox" class="mt-2 d-none">
+                                <span class="small text-muted d-block mb-1">Photo Preview:</span>
+                                <img id="dishPhotoPreview" src="#" alt="Preview" class="rounded-3 shadow-sm border" style="max-height: 120px; object-fit: cover;" />
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-sk-primary py-2 px-4">Submit Review</button>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Your Comments & Cooking Tips</label>
+                            <textarea name="comment" rows="3" class="form-control" placeholder="How did it taste? Any substitutions or cooking tips to share with others?" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-sk-primary py-2 px-4">
+                            <i class="fas fa-paper-plane me-1"></i> Submit Review & Photo
+                        </button>
                     </form>
                 </div>
             </div>
@@ -238,13 +386,62 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4 col-12">
-            <!-- Author Profile Card -->
+            <!-- Author Profile Card with Verified Chef Credentials -->
             <div class="card p-4 border-0 shadow-sm text-center mb-4 rounded-4" style="background-color: #ffffff; border: 1px solid #ede3da !important;">
-                <img src="@(Model.User?.AvatarUrl ?? "/images/author/author1.jpg")" alt="Chef" style="width: 86px; height: 86px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 3px solid #c26747;" />
-                <h5 class="fw-bold mb-1" style="color: #2c221e;">@(Model.User?.FullName ?? "Chef Zain")</h5>
-                <p class="text-muted small mb-2" style="color: #c26747 !important; font-weight: 600;">Recipe Creator</p>
+                <div class="position-relative d-inline-block mx-auto mb-2">
+                    <img src="@(Model.User?.AvatarUrl ?? "/images/author/author1.jpg")" alt="Chef" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #c26747;" onerror="this.src='/images/author/author1.jpg'" />
+                    @if (Model.User?.IsVerifiedChef == true)
+                    {
+                        <span class="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm" style="padding: 2px; line-height: 1;" title="Verified Professional Chef">
+                            <i class="fas fa-check-circle" style="color: #1da1f2; font-size: 20px;"></i>
+                        </span>
+                    }
+                </div>
+
+                <h5 class="fw-bold mb-1" style="color: #2c221e;">
+                    @(Model.User?.FullName ?? "Chef Zain")
+                </h5>
+
+                @if (Model.User?.IsVerifiedChef == true)
+                {
+                    <div class="mb-2">
+                        <span class="badge px-3 py-1 text-white shadow-sm" style="background: linear-gradient(135deg, #1da1f2, #0d6efd); border-radius: 20px; font-size: 11px; font-weight: 600;">
+                            <i class="fas fa-certificate me-1"></i> @(Model.User?.ChefTitle ?? "Executive Chef & Founder")
+                        </span>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted small mb-2" style="color: #c26747 !important; font-weight: 600;">Recipe Creator</p>
+                }
+
                 <p class="text-secondary small mb-3">Passionate about authentic flavors, wholesome ingredients, and restaurant-quality home cooking.</p>
                 <a asp-controller="Recipes" asp-action="Index" class="btn btn-sm btn-sk-outline">Browse More Recipes</a>
+            </div>
+
+            <!-- Quick Kitchen Tools Widget -->
+            <div class="card p-3 p-md-4 border-0 shadow-sm rounded-4 mb-4" style="background-color: #faf7f2; border: 1px solid #ede3da !important;">
+                <h5 class="fw-bold mb-3" style="color: #2c221e;"><i class="fas fa-lightbulb text-warning me-2"></i> Smart Kitchen Tools</h5>
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                    <li>
+                        <a asp-controller="Recipes" asp-action="Pantry" class="text-decoration-none d-flex align-items-center gap-2 text-dark small fw-medium">
+                            <span class="rounded-circle bg-white p-2 shadow-sm text-primary"><i class="fas fa-boxes"></i></span>
+                            <span>What's In My Fridge? (Pantry Match)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Recipes" asp-action="ShoppingList" class="text-decoration-none d-flex align-items-center gap-2 text-dark small fw-medium">
+                            <span class="rounded-circle bg-white p-2 shadow-sm text-warning"><i class="fas fa-clipboard-list"></i></span>
+                            <span>My Grocery Shopping List</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="startCookingMode()" class="text-decoration-none d-flex align-items-center gap-2 text-dark small fw-medium">
+                            <span class="rounded-circle bg-white p-2 shadow-sm text-success"><i class="fas fa-utensils"></i></span>
+                            <span>Launch Hands-Free Cooking Mode</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
 
             <!-- Related Recipes -->
@@ -270,8 +467,381 @@
     </div>
 </div>
 
+<!-- ============================================================= -->
+<!-- FULLSCREEN INTERACTIVE COOKING MODE MODAL                     -->
+<!-- ============================================================= -->
+<div id="cookingModeModal" class="cooking-mode-overlay d-none">
+    <div class="cooking-mode-container">
+        <!-- Top Toolbar -->
+        <div class="cooking-mode-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-warning text-dark px-3 py-2 fw-bold" style="font-size: 13px;">
+                    <i class="fas fa-fire me-1"></i> COOKING MODE
+                </span>
+                <span class="text-white fw-bold d-none d-md-inline" style="font-size: 16px;">@Model.Title</span>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <span id="wakeLockStatus" class="small text-white-50 d-none d-sm-inline" title="Screen stays awake while in Cooking Mode">
+                    <i class="fas fa-eye text-success me-1"></i> Screen Awake
+                </span>
+                <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3" onclick="exitCookingMode()">
+                    <i class="fas fa-times me-1"></i> Exit
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Cooking Step Body -->
+        <div class="cooking-mode-body px-4 py-4 text-center d-flex flex-column justify-content-between">
+            <div class="cooking-step-badge mb-3">
+                <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm" id="stepCounterBadge">
+                    Step 1 of @Model.Instructions.Count
+                </span>
+            </div>
+
+            <!-- Big Step Instruction Text -->
+            <div class="my-auto py-3">
+                <h2 class="cooking-instruction-text text-white fw-normal" id="currentInstructionText">
+                    Loading instruction...
+                </h2>
+
+                <!-- Voice / Read Step Assistant Button -->
+                <div class="mt-4">
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4 py-2 me-2" onclick="speakCurrentStep()">
+                        <i class="fas fa-volume-up me-2 text-warning"></i> Read Aloud
+                    </button>
+                    <span id="timerDetectionWrap">
+                        <!-- Auto-detected timer button inserted dynamically -->
+                    </span>
+                </div>
+
+                <!-- Active Countdown Timer Box (Shown when a timer is running) -->
+                <div id="activeTimerBox" class="mt-4 d-none p-3 rounded-4 mx-auto shadow-lg" style="max-width: 320px; background: rgba(0,0,0,0.6); border: 2px solid #c26747;">
+                    <div class="small text-white-50 mb-1"><i class="far fa-clock text-warning me-1"></i> Active Step Timer</div>
+                    <div class="display-4 fw-bold text-warning mb-2" id="timerDigits">00:00</div>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn btn-sm btn-light" id="timerPauseBtn" onclick="toggleTimerPause()">Pause</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="stopCookingTimer()">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="cooking-mode-footer pt-4 border-top d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-outline-light px-4 py-2 rounded-pill" id="prevStepBtn" onclick="navigateStep(-1)">
+                    &larr; Previous Step
+                </button>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sk-primary px-5 py-2 rounded-pill fw-bold shadow-lg" id="nextStepBtn" onclick="navigateStep(1)">
+                        Next Step &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .serving-scaler-control .serving-btn {
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .cooking-mode-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #191412;
+            z-index: 999999;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cooking-mode-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .cooking-instruction-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(24px, 4vw, 38px);
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            color: #f7f3ee;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .cooking-mode-body {
+            flex-grow: 1;
+        }
+    </style>
+}
+
 @section Scripts {
     <script>
+        // ==========================================
+        // 1. SERVINGS & PORTION SCALER
+        // ==========================================
+        const originalServings = @Model.Servings;
+        let currentServings = originalServings;
+
+        function changeServings(delta) {
+            const newServings = currentServings + delta;
+            if (newServings < 1 || newServings > 50) return;
+            currentServings = newServings;
+
+            document.getElementById('scalerServingsCount').innerText = currentServings;
+            document.getElementById('metaServingsText').innerText = currentServings;
+
+            const scaleRatio = currentServings / originalServings;
+            const labels = document.querySelectorAll('.ingredient-text');
+
+            labels.forEach(label => {
+                const originalText = label.getAttribute('data-original');
+                label.innerText = scaleIngredientText(originalText, scaleRatio);
+            });
+        }
+
+        function scaleIngredientText(text, ratio) {
+            // Regex to match leading fractions or numbers e.g. "1/2", "1.5", "2", "3/4"
+            return text.replace(/^(\d+\/\d+|\d+(\.\d+)?)/, function(match) {
+                let num = 0;
+                if (match.includes('/')) {
+                    const parts = match.split('/');
+                    num = parseFloat(parts[0]) / parseFloat(parts[1]);
+                } else {
+                    num = parseFloat(match);
+                }
+                const scaled = num * ratio;
+                return formatQuantity(scaled);
+            });
+        }
+
+        function formatQuantity(val) {
+            if (Math.abs(val - Math.round(val)) < 0.05) {
+                return Math.round(val).toString();
+            }
+            // Check for simple fractions like .5, .25, .75, .33
+            const whole = Math.floor(val);
+            const remainder = val - whole;
+            let frac = '';
+            if (Math.abs(remainder - 0.5) < 0.08) frac = '1/2';
+            else if (Math.abs(remainder - 0.25) < 0.08) frac = '1/4';
+            else if (Math.abs(remainder - 0.75) < 0.08) frac = '3/4';
+            else if (Math.abs(remainder - 0.33) < 0.08) frac = '1/3';
+            else if (Math.abs(remainder - 0.67) < 0.08) frac = '2/3';
+
+            if (frac) {
+                return whole > 0 ? `${whole} ${frac}` : frac;
+            }
+            return (Math.round(val * 10) / 10).toString();
+        }
+
+        // ==========================================
+        // 2. GROCERY SHOPPING LIST
+        // ==========================================
+        function addAllToShoppingList() {
+            let cart = JSON.parse(localStorage.getItem('deliciousa_shopping_list') || '[]');
+            const labels = document.querySelectorAll('.ingredient-text');
+            let addedCount = 0;
+
+            labels.forEach(label => {
+                const text = label.innerText.trim();
+                if (!cart.some(c => c.name.toLowerCase() === text.toLowerCase())) {
+                    cart.push({ id: Date.now() + Math.random(), name: text, checked: false });
+                    addedCount++;
+                }
+            });
+
+            localStorage.setItem('deliciousa_shopping_list', JSON.stringify(cart));
+            alert(`Added ${addedCount} ingredients to your Grocery Shopping List!`);
+        }
+
+        function addSingleToShoppingList(item) {
+            let cart = JSON.parse(localStorage.getItem('deliciousa_shopping_list') || '[]');
+            if (!cart.some(c => c.name.toLowerCase() === item.toLowerCase())) {
+                cart.push({ id: Date.now() + Math.random(), name: item, checked: false });
+                localStorage.setItem('deliciousa_shopping_list', JSON.stringify(cart));
+                alert(`Added "${item}" to your Grocery Shopping List!`);
+            } else {
+                alert(`"${item}" is already in your Grocery Shopping List.`);
+            }
+        }
+
+        // ==========================================
+        // 3. FULLSCREEN INTERACTIVE COOKING MODE
+        // ==========================================
+        const steps = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Instructions));
+        let currentStepIndex = 0;
+        let wakeLock = null;
+        let timerInterval = null;
+        let timerSecondsRemaining = 0;
+        let isTimerPaused = false;
+
+        async function startCookingMode() {
+            currentStepIndex = 0;
+            document.getElementById('cookingModeModal').classList.remove('d-none');
+            document.body.style.overflow = 'hidden';
+            renderStep();
+
+            // Request Screen WakeLock
+            if ('wakeLock' in navigator) {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                } catch (err) {
+                    console.log('WakeLock not supported or denied: ' + err);
+                }
+            }
+        }
+
+        function exitCookingMode() {
+            document.getElementById('cookingModeModal').classList.add('d-none');
+            document.body.style.overflow = '';
+            if (wakeLock !== null) {
+                wakeLock.release();
+                wakeLock = null;
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            stopCookingTimer();
+        }
+
+        function renderStep() {
+            const stepText = steps[currentStepIndex];
+            document.getElementById('stepCounterBadge').innerText = `Step ${currentStepIndex + 1} of ${steps.length}`;
+            document.getElementById('currentInstructionText').innerText = stepText;
+
+            document.getElementById('prevStepBtn').disabled = (currentStepIndex === 0);
+            const nextBtn = document.getElementById('nextStepBtn');
+            if (currentStepIndex === steps.length - 1) {
+                nextBtn.innerHTML = '🎉 Finish Cooking!';
+            } else {
+                nextBtn.innerHTML = 'Next Step &rarr;';
+            }
+
+            // Auto-detect timer from text e.g. "8 minutes", "15 mins", "30 seconds"
+            const match = stepText.match(/(\d+)\s*(minute|minutes|min|mins|second|seconds|sec)/i);
+            const timerWrap = document.getElementById('timerDetectionWrap');
+            if (match) {
+                const count = parseInt(match[1]);
+                const unit = match[2].toLowerCase();
+                const totalSec = unit.startsWith('sec') ? count : count * 60;
+                timerWrap.innerHTML = `
+                    <button type="button" class="btn btn-warning rounded-pill px-4 py-2 shadow-sm" onclick="startTimerFor(${totalSec})">
+                        <i class="fas fa-stopwatch me-1"></i> Start ${count} ${unit} Timer
+                    </button>
+                `;
+            } else {
+                timerWrap.innerHTML = '';
+            }
+        }
+
+        function navigateStep(direction) {
+            const newIndex = currentStepIndex + direction;
+            if (newIndex >= 0 && newIndex < steps.length) {
+                currentStepIndex = newIndex;
+                renderStep();
+            } else if (newIndex >= steps.length) {
+                alert('Congratulations! You completed all cooking steps. Bon Appetit!');
+                exitCookingMode();
+            }
+        }
+
+        function speakCurrentStep() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const text = `Step ${currentStepIndex + 1}. ${steps[currentStepIndex]}`;
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Text-to-speech is not supported in your browser.');
+            }
+        }
+
+        // In-Step Countdown Timer
+        function startTimerFor(seconds) {
+            clearInterval(timerInterval);
+            timerSecondsRemaining = seconds;
+            isTimerPaused = false;
+            document.getElementById('activeTimerBox').classList.remove('d-none');
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                if (!isTimerPaused) {
+                    timerSecondsRemaining--;
+                    updateTimerDisplay();
+                    if (timerSecondsRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        playAlarmChime();
+                        alert('⏰ Timer finished! Check your dish.');
+                        document.getElementById('activeTimerBox').classList.add('d-none');
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSecondsRemaining / 60);
+            const secs = timerSecondsRemaining % 60;
+            document.getElementById('timerDigits').innerText = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimerPause() {
+            isTimerPaused = !isTimerPaused;
+            document.getElementById('timerPauseBtn').innerText = isTimerPaused ? 'Resume' : 'Pause';
+        }
+
+        function stopCookingTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('activeTimerBox').classList.add('d-none');
+        }
+
+        function playAlarmChime() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                osc.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.8);
+            } catch (e) {
+                console.log('Audio chime error:', e);
+            }
+        }
+
+        // ==========================================
+        // 4. PHOTO PREVIEW & SAVED RECIPE
+        // ==========================================
+        function previewReviewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('dishPhotoPreview').src = e.target.result;
+                    document.getElementById('photoPreviewBox').classList.remove('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function toggleSave(recipeId) {
             @if (User.Identity == null || !User.Identity.IsAuthenticated)
             {

@@ -38,8 +38,11 @@
                 <a asp-controller="Recipes" asp-action="Index" class="btn btn-sk-primary">
                     <i class="fas fa-compass"></i> Explore All Recipes
                 </a>
+                <a asp-controller="Recipes" asp-action="Pantry" class="btn btn-sk-light" style="background: rgba(255,255,255,0.95); color: #2c221e;">
+                    <i class="fas fa-magic" style="color: #c26747;"></i> What's In My Fridge?
+                </a>
                 <a asp-controller="Recipes" asp-action="Create" class="btn btn-sk-light">
-                    <i class="fas fa-plus-circle text-danger"></i> + Share Your Recipe
+                    <i class="fas fa-plus-circle text-danger"></i> + Share Recipe
                 </a>
             </div>
         </div>
@@ -125,9 +128,17 @@
                             <div class="sk-card-content">
                                 <div class="sk-card-meta-top">
                                     <span class="sk-card-cat">@recipe.Category</span>
-                                    <span class="sk-card-rating">
-                                        <i class="fas fa-star"></i> @recipe.AverageRating
-                                    </span>
+                                    <div class="d-flex align-items-center gap-1">
+                                        @if (recipe.User?.IsVerifiedChef == true)
+                                        {
+                                            <span title="Verified Professional Chef" style="color: #1da1f2; font-size: 13px;">
+                                                <i class="fas fa-check-circle"></i>
+                                            </span>
+                                        }
+                                        <span class="sk-card-rating">
+                                            <i class="fas fa-star"></i> @recipe.AverageRating
+                                        </span>
+                                    </div>
                                 </div>
                                 <h3 class="sk-card-title">
                                     <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.Id">@recipe.Title</a>
