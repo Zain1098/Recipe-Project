@@ -24,6 +24,11 @@ namespace Recipe_Project.Models
         [MaxLength(100)]
         public string? ChefTitle { get; set; } // e.g. "Executive Chef", "Master Culinary Specialist"
 
+        [MaxLength(10)]
+        public string? PasswordResetOtp { get; set; }
+
+        public DateTime? PasswordResetOtpExpiry { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();

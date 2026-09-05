@@ -14,6 +14,8 @@ namespace Recipe_Project.Data
             // Lightweight SQLite column migrations for existing databases
             try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN IsVerifiedChef INTEGER NOT NULL DEFAULT 0;"); } catch { }
             try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN ChefTitle TEXT;"); } catch { }
+            try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN PasswordResetOtp TEXT;"); } catch { }
+            try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN PasswordResetOtpExpiry TEXT;"); } catch { }
             try { await context.Database.ExecuteSqlRawAsync("ALTER TABLE Reviews ADD COLUMN DishPhotoUrl TEXT;"); } catch { }
 
             if (context.Users.Any())
